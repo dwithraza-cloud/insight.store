@@ -1,0 +1,6 @@
+{
+  "name": "Insight Store",
+  "description": "Insight Store — Smarter tech, better living. Shop trusted electronics, smart devices, computers, gaming and home technology with fast delivery across Pakistan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
