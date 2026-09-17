@@ -75,7 +75,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Left image thumbnail */}
         <div 
           onClick={() => onQuickView(product)}
-          className="relative w-full sm:w-48 sm:min-w-[192px] aspect-square bg-[#0c1322] rounded-xl overflow-hidden p-2.5 flex items-center justify-center cursor-pointer group-hover:opacity-95 transition-all"
+          className="relative w-full sm:w-48 sm:min-w-[192px] aspect-square bg-slate-50/50 rounded-xl overflow-hidden border border-slate-100 flex items-center justify-center cursor-pointer group-hover:opacity-95 group-hover:border-blue-200 transition-all"
         >
           {product.badge && (
             <span className={`absolute top-2 left-2 z-10 text-[10px] font-extrabold tracking-wider px-2.5 py-0.5 rounded-full uppercase shadow-xs ${getBadgeStyle(product.badge)}`}>
@@ -87,7 +87,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             src={imageError ? getFallbackImage() : product.image}
             alt={product.title}
             onError={() => setImageError(true)}
-            className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
         </div>
@@ -241,7 +241,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Product Image Container */}
       <div 
         onClick={() => onQuickView(product)}
-        className="relative w-full aspect-square bg-[#0b1322] rounded-xl overflow-hidden mb-3 p-2.5 flex items-center justify-center cursor-pointer transition-all duration-300 group-hover:bg-[#070e1b]"
+        className="relative w-full aspect-square bg-slate-50/50 rounded-xl overflow-hidden mb-3 border border-slate-100 flex items-center justify-center cursor-pointer transition-all duration-300 group-hover:border-blue-200"
         role="button"
         tabIndex={0}
         aria-label={`View ${product.title}`}
@@ -258,7 +258,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           src={imageError ? getFallbackImage() : product.image}
           alt={product.title}
           onError={() => setImageError(true)}
-          className="w-full h-full object-cover rounded-lg group-hover:scale-106 transition-transform duration-500"
+          className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
 

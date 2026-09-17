@@ -110,9 +110,10 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
               onClose();
               onGoToAccount();
             }}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 font-bold text-xs text-gray-700 cursor-pointer"
+            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#073faf] hover:bg-[#06328c] font-bold text-xs text-white flex items-center justify-center gap-2 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
           >
-            View in My Orders
+            <Truck className="w-4 h-4" />
+            <span>Track Live Shipment</span>
           </button>
 
           <button
@@ -120,7 +121,7 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
               onClose();
               onGoToShop();
             }}
-            className="w-full sm:w-auto px-8 py-3 rounded-xl bg-[#073faf] hover:bg-[#082f87] font-bold text-xs text-white flex items-center justify-center gap-2 shadow-md cursor-pointer"
+            className="w-full sm:w-auto px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 font-bold text-xs text-gray-700 flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <span>Continue Shopping</span>
             <ArrowRight className="w-4 h-4" />

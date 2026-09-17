@@ -80,6 +80,47 @@ export interface Order {
   paymentMethod: 'cod' | 'bank' | 'card';
 }
 
+export type ShippingStatusCode = 'processing' | 'in_transit' | 'out_for_delivery' | 'delivered';
+
+export interface TrackingCheckpoint {
+  id: string;
+  title: string;
+  location: string;
+  timestamp: string;
+  completed: boolean;
+  current?: boolean;
+  description: string;
+}
+
+export interface TrackingDetails {
+  orderId: string;
+  carrier: string;
+  trackingNumber: string;
+  status: 'Order Confirmed' | 'Processing' | 'In Transit' | 'Out for Delivery' | 'Delivered';
+  statusCode: ShippingStatusCode;
+  progressPercent: number;
+  estimatedDelivery: string;
+  origin: string;
+  destination: string;
+  recipientName: string;
+  recipientPhone: string;
+  recipientAddress: string;
+  recipientCity: string;
+  checkpoints: TrackingCheckpoint[];
+  courierRider?: {
+    name: string;
+    phone: string;
+    vehicle: string;
+  };
+  totalAmount: number;
+  paymentMethod: string;
+  itemsSummary: {
+    title: string;
+    quantity: number;
+    image: string;
+  }[];
+}
+
 export interface BlogPost {
   id: string;
   tag: string;
