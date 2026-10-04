@@ -247,8 +247,53 @@ export async function fetchTrackingStatus(
   );
 
   if (matchedUserOrder) {
+    const isCancelled = matchedUserOrder.status === 'Cancelled';
     const isDelivered = matchedUserOrder.status === 'Delivered';
     const isShipped = matchedUserOrder.status === 'Shipped';
+    
+    if (isCancelled) {
+      return {
+        orderId: matchedUserOrder.id,
+        carrier: 'Insight Order Desk',
+        trackingNumber: `CNL-${cleanId.replace(/[^A-Z0-9]/g, '')}`,
+        status: 'Cancelled',
+        statusCode: 'cancelled',
+        progressPercent: 0,
+        estimatedDelivery: 'Order Cancelled',
+        origin: 'Insight Store Central Fulfillment, Gulberg III, Lahore',
+        destination: `${matchedUserOrder.customer.address}, ${matchedUserOrder.customer.city}`,
+        recipientName: matchedUserOrder.customer.fullName,
+        recipientPhone: matchedUserOrder.customer.phone,
+        recipientAddress: matchedUserOrder.customer.address,
+        recipientCity: matchedUserOrder.customer.city,
+        totalAmount: matchedUserOrder.total,
+        paymentMethod: matchedUserOrder.paymentMethod.toUpperCase(),
+        itemsSummary: matchedUserOrder.items.map((i) => ({
+          title: i.product.title,
+          quantity: i.quantity,
+          image: i.product.image
+        })),
+        checkpoints: [
+          {
+            id: 'cp-1',
+            title: 'Order Placed',
+            location: 'Insight Store Online',
+            timestamp: matchedUserOrder.date,
+            completed: true,
+            description: 'Order registered in system.'
+          },
+          {
+            id: 'cp-2',
+            title: 'Order Cancelled',
+            location: 'Insight Store Central Fulfillment',
+            timestamp: matchedUserOrder.date,
+            completed: true,
+            current: true,
+            description: 'Order was cancelled and refund/void transaction was initiated.'
+          }
+        ]
+      };
+    }
     
     return {
       orderId: matchedUserOrder.id,

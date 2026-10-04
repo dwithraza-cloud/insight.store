@@ -1,6 +1,7 @@
-import React from 'react';
-import { CheckCircle, Package, Truck, Phone, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { CheckCircle, Package, Truck, Phone, ArrowRight, Download, Check, Loader2 } from 'lucide-react';
 import { Order } from '../types';
+import { generateInvoicePDF } from '../services/invoiceGenerator';
 
 interface OrderConfirmationModalProps {
   order: Order | null;
@@ -15,7 +16,23 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
   onGoToShop,
   onGoToAccount
 }) => {
+  const [isGeneratingInvoice, setIsGeneratingInvoice] = useState<boolean>(false);
+  const [downloadSuccess, setDownloadSuccess] = useState<boolean>(false);
+
   if (!order) return null;
+
+  const handleDownloadInvoice = async () => {
+    setIsGeneratingInvoice(true);
+    try {
+      await generateInvoicePDF(order);
+      setDownloadSuccess(true);
+      setTimeout(() => setDownloadSuccess(false), 3000);
+    } catch (err) {
+      console.error('Failed to generate invoice PDF:', err);
+    } finally {
+      setIsGeneratingInvoice(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto animate-fadeIn">
@@ -110,10 +127,39 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
               onClose();
               onGoToAccount();
             }}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#073faf] hover:bg-[#06328c] font-bold text-xs text-white flex items-center justify-center gap-2 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+            className="w-full sm:w-auto px-5 py-3 rounded-xl bg-[#073faf] hover:bg-[#06328c] font-bold text-xs text-white flex items-center justify-center gap-2 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
           >
             <Truck className="w-4 h-4" />
             <span>Track Live Shipment</span>
+          </button>
+
+          <button
+            onClick={handleDownloadInvoice}
+            disabled={isGeneratingInvoice}
+            className={`w-full sm:w-auto px-5 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 border shadow-xs transition-all cursor-pointer ${
+              downloadSuccess
+                ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                : isGeneratingInvoice
+                ? 'bg-blue-50 text-[#073faf] border-blue-200 cursor-wait'
+                : 'bg-white hover:bg-blue-50 text-[#073faf] border-blue-200 hover:border-blue-300'
+            }`}
+          >
+            {isGeneratingInvoice ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-[#073faf]" />
+                <span>Generating Invoice...</span>
+              </>
+            ) : downloadSuccess ? (
+              <>
+                <Check className="w-4 h-4 text-emerald-600" />
+                <span>Invoice Downloaded!</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4 text-[#073faf]" />
+                <span>Download Invoice (PDF)</span>
+              </>
+            )}
           </button>
 
           <button
@@ -121,7 +167,7 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
               onClose();
               onGoToShop();
             }}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 font-bold text-xs text-gray-700 flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="w-full sm:w-auto px-5 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 font-bold text-xs text-gray-700 flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <span>Continue Shopping</span>
             <ArrowRight className="w-4 h-4" />

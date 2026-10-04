@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Phone, MapPin, ArrowRight, ShieldCheck, Check } from 'lucide-react';
 import { PageRoute } from '../types';
 import { departmentsData } from '../data/storeData';
+import { Logo } from './Logo';
 
 interface FooterProps {
   onNavigate: (route: PageRoute) => void;
@@ -30,24 +31,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onSelectDepartment }
           <div className="lg:col-span-4 space-y-5">
             <button
               onClick={() => onNavigate('home')}
-              className="text-left cursor-pointer focus:outline-none"
+              className="text-left cursor-pointer focus:outline-none group inline-block"
+              aria-label="Insight Store Home"
             >
-              <img
-                src="https://insightstore.designerinsight.online/insight-store-logo.webp"
-                alt="Insight Store"
-                className="h-10 w-auto brightness-0 invert"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  const fallback = e.currentTarget.parentElement?.querySelector('.footer-logo-fallback');
-                  if (fallback) (fallback as HTMLElement).style.display = 'flex';
-                }}
+              <Logo 
+                variant="white" 
+                className="h-10 md:h-[42px] w-auto max-w-[190px] object-contain transition-transform group-hover:scale-[1.02] duration-150" 
               />
-              <div className="footer-logo-fallback hidden items-center gap-2 text-white">
-                <div className="w-8 h-8 rounded-lg bg-[#00d7ef] flex items-center justify-center font-bold text-[#083498] text-lg">
-                  IS
-                </div>
-                <span className="font-extrabold text-xl tracking-tight text-white">Insight Store</span>
-              </div>
             </button>
 
             <p className="text-xs sm:text-sm text-blue-100/80 leading-relaxed max-w-sm">

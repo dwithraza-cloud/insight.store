@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { PageRoute, Product, Department } from '../types';
 import { departmentsData } from '../data/storeData';
+import { Logo } from './Logo';
 
 interface HeaderProps {
   currentRoute: PageRoute;
@@ -106,33 +107,16 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="topbar">
         <div className="wrap">
           <div className="header-main flex items-center justify-between gap-4 h-[86px]">
-            {/* Logo */}
+            {/* Brand Logo */}
             <button 
               onClick={() => onNavigate('home')}
-              className="logo-btn flex items-center text-left focus:outline-none cursor-pointer"
+              className="logo-btn flex items-center text-left focus:outline-none cursor-pointer group shrink-0"
               aria-label="Insight Store Home"
             >
-              <img
-                src="https://insightstore.designerinsight.online/insight-store-logo.webp"
-                alt="Insight Store"
-                className="h-11 w-auto object-contain brightness-0 invert"
-                onError={(e) => {
-                  // Fallback if asset is blocked
-                  const target = e.currentTarget;
-                  target.style.display = 'none';
-                  const fallback = target.parentElement?.querySelector('.logo-fallback');
-                  if (fallback) (fallback as HTMLElement).style.display = 'flex';
-                }}
+              <Logo 
+                variant="white" 
+                className="h-9 sm:h-10 md:h-[42px] w-auto max-w-[170px] sm:max-w-[200px] object-contain transition-transform group-hover:scale-[1.02] duration-150" 
               />
-              <div className="logo-fallback hidden items-center gap-2 text-white">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#00d7ef] to-white flex items-center justify-center font-bold text-[#083498] text-xl">
-                  IS
-                </div>
-                <div>
-                  <span className="font-bold text-xl tracking-tight text-white block leading-none">Insight</span>
-                  <span className="text-xs text-[#00d7ef] tracking-wider uppercase font-semibold">Store</span>
-                </div>
-              </div>
             </button>
 
             {/* Live Search Form */}

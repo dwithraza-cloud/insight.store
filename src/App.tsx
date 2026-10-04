@@ -44,7 +44,7 @@ export default function App() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [homeFeaturedTab, setHomeFeaturedTab] = useState<string>('All');
 
-  // Sample order history
+  // Sample order history showcasing diverse dynamic order statuses
   const [orders, setOrders] = useState<Order[]>([
     {
       id: '#IS-94021',
@@ -66,6 +66,67 @@ export default function App() {
         city: 'Lahore'
       },
       paymentMethod: 'cod'
+    },
+    {
+      id: '#IS-10428',
+      date: 'Sep 16, 2026',
+      status: 'Processing',
+      items: [
+        { product: productsData[1], quantity: 1 },
+        { product: productsData[2], quantity: 2 }
+      ],
+      total: 58900,
+      subtotal: 58900,
+      shipping: 0,
+      discount: 0,
+      customer: {
+        fullName: 'Muhammad Hamza',
+        phone: '03145338340',
+        email: 'hamza@insightstore.pk',
+        address: 'House 18-B, Block C-2, Gulberg III',
+        city: 'Lahore'
+      },
+      paymentMethod: 'bank'
+    },
+    {
+      id: '#IS-10387',
+      date: 'Sep 15, 2026',
+      status: 'Shipped',
+      items: [
+        { product: productsData[3], quantity: 1 }
+      ],
+      total: 24999,
+      subtotal: 24999,
+      shipping: 0,
+      discount: 0,
+      customer: {
+        fullName: 'Muhammad Hamza',
+        phone: '03145338340',
+        email: 'hamza@insightstore.pk',
+        address: 'House 18-B, Block C-2, Gulberg III',
+        city: 'Lahore'
+      },
+      paymentMethod: 'cod'
+    },
+    {
+      id: '#IS-88219',
+      date: 'Aug 29, 2026',
+      status: 'Cancelled',
+      items: [
+        { product: productsData[4], quantity: 1 }
+      ],
+      total: 18499,
+      subtotal: 18499,
+      shipping: 0,
+      discount: 0,
+      customer: {
+        fullName: 'Muhammad Hamza',
+        phone: '03145338340',
+        email: 'hamza@insightstore.pk',
+        address: 'House 18-B, Block C-2, Gulberg III',
+        city: 'Lahore'
+      },
+      paymentMethod: 'card'
     }
   ]);
 
@@ -106,6 +167,41 @@ export default function App() {
     handleAddToCart(product, quantity);
     setQuickViewProduct(null);
     setCurrentRoute('checkout');
+  };
+
+  const handleReorder = (order: Order) => {
+    if (!order.items || order.items.length === 0) {
+      showToast('This order has no items to reorder', 'error');
+      return;
+    }
+
+    setCart((prev) => {
+      let updatedCart = [...prev];
+      order.items.forEach((orderItem) => {
+        const existingIndex = updatedCart.findIndex(
+          (cartItem) => cartItem.product.id === orderItem.product.id
+        );
+        if (existingIndex > -1) {
+          updatedCart[existingIndex] = {
+            ...updatedCart[existingIndex],
+            quantity: updatedCart[existingIndex].quantity + orderItem.quantity
+          };
+        } else {
+          updatedCart.push({
+            product: orderItem.product,
+            quantity: orderItem.quantity
+          });
+        }
+      });
+      return updatedCart;
+    });
+
+    const totalCount = order.items.reduce((acc, i) => acc + i.quantity, 0);
+    showToast(
+      `Reordered ${totalCount} item${totalCount > 1 ? 's' : ''} from order ${order.id}!`,
+      'success'
+    );
+    setCurrentRoute('cart');
   };
 
   const handleUpdateCartQuantity = (productId: number, quantity: number) => {
@@ -521,6 +617,7 @@ export default function App() {
             orders={orders}
             onExploreShop={() => setCurrentRoute('shop')}
             onNavigateHome={() => setCurrentRoute('home')}
+            onReorder={handleReorder}
           />
         )}
       </main>

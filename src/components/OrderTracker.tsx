@@ -15,21 +15,27 @@ import {
   ExternalLink,
   ShieldCheck,
   ChevronRight,
-  Navigation
+  Navigation,
+  Download,
+  Loader2,
+  RotateCcw
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Order, TrackingDetails } from '../types';
 import { fetchTrackingStatus, normalizeOrderId } from '../services/deliveryApi';
+import { generateInvoicePDF } from '../services/invoiceGenerator';
 
 interface OrderTrackerProps {
   orders: Order[];
   initialOrderId?: string;
   onSelectOrder?: (orderId: string) => void;
+  onReorder?: (order: Order) => void;
 }
 
 export const OrderTracker: React.FC<OrderTrackerProps> = ({
   orders,
-  initialOrderId = '#IS-94021'
+  initialOrderId = '#IS-94021',
+  onReorder
 }) => {
   const [orderIdInput, setOrderIdInput] = useState<string>(initialOrderId);
   const [activeTracking, setActiveTracking] = useState<TrackingDetails | null>(null);
@@ -37,6 +43,8 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [copiedTracking, setCopiedTracking] = useState<boolean>(false);
   const [lastRefreshed, setLastRefreshed] = useState<string>('Just now');
+  const [isDownloadingInvoice, setIsDownloadingInvoice] = useState<boolean>(false);
+  const [invoiceDownloaded, setInvoiceDownloaded] = useState<boolean>(false);
 
   // Load initial order tracking on mount
   useEffect(() => {
@@ -77,6 +85,41 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
     navigator.clipboard?.writeText(activeTracking.trackingNumber);
     setCopiedTracking(true);
     setTimeout(() => setCopiedTracking(false), 2000);
+  };
+
+  const handleDownloadInvoice = async () => {
+    if (!activeTracking) return;
+    setIsDownloadingInvoice(true);
+    try {
+      const existing = orders.find(
+        (o) => normalizeOrderId(o.id) === normalizeOrderId(activeTracking.orderId)
+      );
+      const orderToExport: Order = existing || {
+        id: activeTracking.orderId,
+        date: activeTracking.orderDate || 'Aug 2026',
+        status: (activeTracking.status as any) || 'Processing',
+        items: [],
+        total: activeTracking.totalAmount,
+        subtotal: activeTracking.totalAmount,
+        shipping: 0,
+        discount: 0,
+        customer: {
+          fullName: 'Valued Customer',
+          email: 'customer@insightstore.pk',
+          phone: '03145338340',
+          address: 'House 18-B, Gulberg III',
+          city: activeTracking.recipientCity || 'Lahore'
+        },
+        paymentMethod: (activeTracking.paymentMethod?.toLowerCase().includes('card') ? 'card' : 'cod') as any
+      };
+      await generateInvoicePDF(orderToExport);
+      setInvoiceDownloaded(true);
+      setTimeout(() => setInvoiceDownloaded(false), 3000);
+    } catch (err) {
+      console.error('Invoice generation failed in tracker:', err);
+    } finally {
+      setIsDownloadingInvoice(false);
+    }
   };
 
   // Quick suggestions based on user orders or sample courier codes
@@ -233,22 +276,28 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
                 </span>
                 <div className="flex items-center gap-2">
                   <span
-                    className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${
-                      activeTracking.statusCode === 'delivered'
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : activeTracking.statusCode === 'out_for_delivery'
-                        ? 'bg-amber-100 text-amber-800'
-                        : activeTracking.statusCode === 'in_transit'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-slate-100 text-slate-800'
+                    className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider border shadow-xs ${
+                      activeTracking.statusCode === 'delivered' || activeTracking.status === 'Delivered'
+                        ? 'bg-emerald-100/90 text-emerald-800 border-emerald-300'
+                        : activeTracking.statusCode === 'cancelled' || activeTracking.status === 'Cancelled'
+                        ? 'bg-red-100/90 text-red-800 border-red-300'
+                        : activeTracking.statusCode === 'processing' || activeTracking.status === 'Processing'
+                        ? 'bg-amber-100/90 text-amber-800 border-amber-300'
+                        : activeTracking.statusCode === 'out_for_delivery' || activeTracking.status === 'Out for Delivery'
+                        ? 'bg-purple-100/90 text-purple-800 border-purple-300'
+                        : 'bg-blue-100/90 text-blue-800 border-blue-300'
                     }`}
                   >
                     <span 
-                      className={`w-2 h-2 rounded-full ${
-                        activeTracking.statusCode === 'delivered'
+                      className={`w-2 h-2 rounded-full shrink-0 ${
+                        activeTracking.statusCode === 'delivered' || activeTracking.status === 'Delivered'
                           ? 'bg-emerald-600'
-                          : activeTracking.statusCode === 'out_for_delivery'
+                          : activeTracking.statusCode === 'cancelled' || activeTracking.status === 'Cancelled'
+                          ? 'bg-red-600'
+                          : activeTracking.statusCode === 'processing' || activeTracking.status === 'Processing'
                           ? 'bg-amber-600 animate-pulse'
+                          : activeTracking.statusCode === 'out_for_delivery' || activeTracking.status === 'Out for Delivery'
+                          ? 'bg-purple-600 animate-pulse'
                           : 'bg-blue-600 animate-pulse'
                       }`} 
                     />
@@ -258,6 +307,57 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
                 <span className="text-xs text-gray-500 font-medium mt-1">
                   {activeTracking.estimatedDelivery}
                 </span>
+
+                {/* Download Invoice Button */}
+                <button
+                  type="button"
+                  onClick={handleDownloadInvoice}
+                  disabled={isDownloadingInvoice}
+                  className={`mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer shadow-xs ${
+                    invoiceDownloaded
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                      : isDownloadingInvoice
+                      ? 'bg-blue-50 text-[#073faf] border-blue-200 cursor-wait'
+                      : 'bg-white hover:bg-blue-50 text-[#073faf] hover:text-[#06328c] border-blue-200 hover:border-blue-300'
+                  }`}
+                  title="Download PDF invoice for this order"
+                >
+                  {isDownloadingInvoice ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#073faf]" />
+                      <span>Generating PDF...</span>
+                    </>
+                  ) : invoiceDownloaded ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="text-emerald-700">PDF Saved!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-3.5 h-3.5 text-[#073faf]" />
+                      <span>Download Invoice</span>
+                    </>
+                  )}
+                </button>
+
+                {/* Reorder Button for Completed/Delivered Shipment */}
+                {(activeTracking.statusCode === 'delivered' || activeTracking.status === 'Delivered') && onReorder && (() => {
+                  const matched = orders.find(
+                    (o) => normalizeOrderId(o.id) === normalizeOrderId(activeTracking.orderId)
+                  );
+                  if (!matched) return null;
+                  return (
+                    <button
+                      type="button"
+                      onClick={() => onReorder(matched)}
+                      className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#073faf] hover:bg-[#06328c] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                      title="Reorder items from this delivered order"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Reorder Items</span>
+                    </button>
+                  );
+                })()}
               </div>
             </div>
 
@@ -267,22 +367,26 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
                 <span>Dispatch</span>
                 <span>In Transit</span>
                 <span>Out for Delivery</span>
-                <span>Delivered</span>
+                <span>{activeTracking.statusCode === 'cancelled' ? 'Cancelled' : 'Delivered'}</span>
               </div>
               <div className="w-full h-2.5 rounded-full bg-gray-100 overflow-hidden relative">
                 <div 
                   className={`h-full transition-all duration-700 ease-out rounded-full ${
                     activeTracking.statusCode === 'delivered'
                       ? 'bg-emerald-500'
-                      : activeTracking.statusCode === 'out_for_delivery'
+                      : activeTracking.statusCode === 'cancelled'
+                      ? 'bg-red-500'
+                      : activeTracking.statusCode === 'processing'
                       ? 'bg-amber-500'
+                      : activeTracking.statusCode === 'out_for_delivery'
+                      ? 'bg-purple-500'
                       : 'bg-gradient-to-r from-[#073faf] to-[#00d7ef]'
                   }`}
-                  style={{ width: `${activeTracking.progressPercent}%` }}
+                  style={{ width: activeTracking.statusCode === 'cancelled' ? '100%' : `${activeTracking.progressPercent}%` }}
                 />
               </div>
               <div className="text-right text-[11px] font-mono font-bold text-gray-400">
-                {activeTracking.progressPercent}% Completed
+                {activeTracking.statusCode === 'cancelled' ? 'Order Cancelled' : `${activeTracking.progressPercent}% Completed`}
               </div>
             </div>
 

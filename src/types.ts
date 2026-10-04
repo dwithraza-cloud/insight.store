@@ -63,7 +63,7 @@ export interface CartItem {
 export interface Order {
   id: string;
   date: string;
-  status: 'Processing' | 'Shipped' | 'Delivered' | 'Pending Verification';
+  status: 'Processing' | 'Shipped' | 'Delivered' | 'Pending Verification' | 'Cancelled';
   items: CartItem[];
   total: number;
   subtotal: number;
@@ -80,7 +80,7 @@ export interface Order {
   paymentMethod: 'cod' | 'bank' | 'card';
 }
 
-export type ShippingStatusCode = 'processing' | 'in_transit' | 'out_for_delivery' | 'delivered';
+export type ShippingStatusCode = 'processing' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'cancelled';
 
 export interface TrackingCheckpoint {
   id: string;
@@ -96,7 +96,7 @@ export interface TrackingDetails {
   orderId: string;
   carrier: string;
   trackingNumber: string;
-  status: 'Order Confirmed' | 'Processing' | 'In Transit' | 'Out for Delivery' | 'Delivered';
+  status: 'Order Confirmed' | 'Processing' | 'In Transit' | 'Out for Delivery' | 'Delivered' | 'Cancelled';
   statusCode: ShippingStatusCode;
   progressPercent: number;
   estimatedDelivery: string;
