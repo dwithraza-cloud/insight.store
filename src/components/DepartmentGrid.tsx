@@ -12,7 +12,14 @@ import {
   Gem, 
   Wind,
   CookingPot,
-  Bed
+  Bed,
+  ShoppingBag,
+  HeartPulse,
+  Laptop,
+  Headphones,
+  Watch,
+  Camera,
+  Wifi
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { departmentsData } from '../data/storeData';
@@ -39,22 +46,45 @@ export const DepartmentGrid: React.FC<DepartmentGridProps> = ({
 
   const getCategoryIcon = (id: string) => {
     switch (id) {
+      case 'digital-products':
+        return <Layers className="w-4 h-4" />;
       case 'kitchen-accessories':
         return <Utensils className="w-4 h-4" />;
+      case 'kitchen':
+        return <CookingPot className="w-4 h-4" />;
       case 'clothes':
         return <Sparkles className="w-4 h-4" />;
+      case 'bags-accessories':
+        return <ShoppingBag className="w-4 h-4" />;
       case 'toys':
+      case 'gaming':
         return <Gamepad2 className="w-4 h-4" />;
       case 'electronics':
+      case 'television':
         return <Tv className="w-4 h-4" />;
       case 'gadgets':
+      case 'mobile':
         return <Smartphone className="w-4 h-4" />;
+      case 'computers':
+        return <Laptop className="w-4 h-4" />;
+      case 'audio':
+        return <Headphones className="w-4 h-4" />;
+      case 'wearables':
+        return <Watch className="w-4 h-4" />;
+      case 'camera':
+        return <Camera className="w-4 h-4" />;
+      case 'networking':
+        return <Wifi className="w-4 h-4" />;
+      case 'personal-care':
+        return <HeartPulse className="w-4 h-4" />;
       case 'bedsheets':
         return <Bed className="w-4 h-4" />;
       case 'jewellery':
         return <Gem className="w-4 h-4" />;
       case 'home-appliances':
         return <Wind className="w-4 h-4" />;
+      case 'home-decor':
+        return <Sparkles className="w-4 h-4" />;
       default:
         return <CookingPot className="w-4 h-4" />;
     }

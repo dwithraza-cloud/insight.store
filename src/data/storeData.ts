@@ -1,87 +1,39 @@
 import { Department, HeroSlide, BlogPost } from '../types';
+import { productsData } from './products';
 
-export const departmentsData: Department[] = [
-  {
-    id: 'kitchen-accessories',
-    name: 'Kitchen Accessories',
-    icon: 'CookingPot',
-    image: 'https://insightstore.designerinsight.online/images/category-kitchen.webp',
-    count: 3,
-    description: 'Cookware, utensils, and modern prep tools'
-  },
-  {
-    id: 'clothes',
-    name: 'Ladies & Gents Clothes',
-    icon: 'Shirt',
-    image: 'https://insightstore.designerinsight.online/images/category-fashion.webp',
-    count: 125,
-    description: 'Lawn suits, cotton kurtas, and co-ords'
-  },
-  {
-    id: 'toys',
-    name: 'Toys',
-    icon: 'Gamepad2',
-    image: 'https://insightstore.designerinsight.online/images/category-toys.webp',
-    count: 5,
-    description: 'Plush toys, wooden Montessori, and RC cars'
-  },
-  {
-    id: 'electronics',
-    name: 'Electronics',
-    icon: 'Tv',
-    image: 'https://insightstore.designerinsight.online/images/category-electronics.webp',
-    count: 3,
-    description: 'Frameless 4K TVs, air fryers, and microwaves'
-  },
-  {
-    id: 'gadgets',
-    name: 'Gadgets',
-    icon: 'Headphones',
-    image: 'https://insightstore.designerinsight.online/images/category-gadgets.webp',
-    count: 9,
-    description: 'ANC headphones, smartwatches, and earbuds'
-  },
-  {
-    id: 'bedsheets',
-    name: 'Bedsheets & Bedding',
-    icon: 'Layers',
-    image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=700&q=85',
-    count: 18,
-    description: 'Pure cotton 4-piece sets, floral & damask prints'
-  },
-  {
-    id: 'home-decor',
-    name: 'Home Decor',
-    icon: 'Sparkles',
-    image: 'https://insightstore.designerinsight.online/images/category-home-decor.webp',
-    count: 12,
-    description: 'Ceramic vases, touch lamps, and indoor plants'
-  },
-  {
-    id: 'jewellery',
-    name: 'Jewellery',
-    icon: 'Gem',
-    image: 'https://insightstore.designerinsight.online/images/category-jewellery.webp',
-    count: 8,
-    description: 'Royal zircon sets, gold bracelets, and pearl drops'
-  },
-  {
-    id: 'home-appliances',
-    name: 'Home Appliances',
-    icon: 'Wind',
-    image: 'https://insightstore.designerinsight.online/images/category-appliances.webp',
-    count: 6,
-    description: 'Smart vacuums, blenders, irons, and DC fans'
-  },
-  {
-    id: 'digital-products',
-    name: 'Digital Products',
-    icon: 'Layers',
-    image: 'https://insightstore.designerinsight.online/images/products/digital-canva.webp',
-    count: 4,
-    description: 'Verified licenses, templates, and digital assets'
-  }
+const DEPARTMENT_META: Array<Omit<Department, 'count' | 'image'> & { image?: string }> = [
+  { id: 'digital-products', name: 'Digital Products', icon: 'Layers', image: '/images/products/digital-canva.webp', description: 'Subscriptions, creative tools, streaming and AI access' },
+  { id: 'bedsheets', name: 'Bedsheets', icon: 'Bed', description: 'Pure cotton single and king-size collections' },
+  { id: 'clothes', name: 'Ladies & Gents Clothes', icon: 'Shirt', image: '/images/category-fashion.webp', description: 'Lawn collections and premium embroidered suits' },
+  { id: 'bags-accessories', name: 'Bags & Accessories', icon: 'ShoppingBag', description: 'Everyday bags, pouches and useful accessories' },
+  { id: 'kitchen', name: 'Kitchen', icon: 'CookingPot', description: 'Practical cookware for everyday use' },
+  { id: 'kitchen-accessories', name: 'Kitchen Accessories', icon: 'Utensils', image: '/images/category-kitchen.webp', description: 'Cookware, utensils and modern prep tools' },
+  { id: 'toys', name: 'Toys', icon: 'Gamepad2', image: '/images/category-toys.webp', description: 'Fun toys, activity products and gifts' },
+  { id: 'personal-care', name: 'Personal Care', icon: 'HeartPulse', description: 'Useful personal care and grooming essentials' },
+  { id: 'gadgets', name: 'Gadgets', icon: 'Smartphone', image: '/images/category-gadgets.webp', description: 'Power banks, earbuds, lights and accessories' },
+  { id: 'mobile', name: 'Mobile', icon: 'Smartphone', description: 'Smartphones and mobile essentials' },
+  { id: 'computers', name: 'Computers', icon: 'Laptop', description: 'Laptops and computing products' },
+  { id: 'audio', name: 'Audio', icon: 'Headphones', description: 'Headphones, speakers and personal audio' },
+  { id: 'wearables', name: 'Wearables', icon: 'Watch', description: 'Smart watches and connected accessories' },
+  { id: 'television', name: 'Television', icon: 'Tv', description: 'Smart TVs and home entertainment' },
+  { id: 'electronics', name: 'Electronics', icon: 'Tv', image: '/images/category-electronics.webp', description: 'Useful electronics for modern homes' },
+  { id: 'gaming', name: 'Gaming', icon: 'Gamepad2', description: 'Controllers and gaming accessories' },
+  { id: 'camera', name: 'Camera', icon: 'Camera', description: 'Cameras and visual creation gear' },
+  { id: 'networking', name: 'Networking', icon: 'Wifi', description: 'Routers and reliable connectivity' },
+  { id: 'home-appliances', name: 'Home Appliances', icon: 'Wind', image: '/images/category-appliances.webp', description: 'Smart appliances for easier everyday living' },
+  { id: 'home-decor', name: 'Home Decor', icon: 'Sparkles', image: '/images/category-home-decor.webp', description: 'Decor accents, lamps, vases and plants' },
+  { id: 'jewellery', name: 'Jewellery', icon: 'Gem', image: '/images/category-jewellery.webp', description: 'Elegant necklaces, bracelets and earrings' },
 ];
+
+export const departmentsData: Department[] = DEPARTMENT_META.map((department) => {
+  const categoryProducts = productsData.filter((product) => product.category === department.name);
+
+  return {
+    ...department,
+    count: categoryProducts.length,
+    image: department.image || categoryProducts[0]?.image || '/images/category-gadgets.webp',
+  };
+});
 
 export const heroSlidesData: HeroSlide[] = [
   {

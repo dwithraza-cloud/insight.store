@@ -87,7 +87,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             src={imageError ? getFallbackImage() : product.image}
             alt={product.title}
             onError={() => setImageError(true)}
-            className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-contain p-2 rounded-xl group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
         </div>
@@ -258,7 +258,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           src={imageError ? getFallbackImage() : product.image}
           alt={product.title}
           onError={() => setImageError(true)}
-          className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-contain p-2 sm:p-3 rounded-xl group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
 
