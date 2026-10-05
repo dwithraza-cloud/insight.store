@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import React, { useState, useRef } from 'react';
 import { 
   User, 
@@ -671,7 +672,7 @@ export const AccountScreen: React.FC<AccountScreenProps> = ({
                                 : ''
                             }`}
                           >
-                            <img
+                            <ProductImage
                               src={item.product.image}
                               alt=""
                               className="w-12 h-12 object-contain rounded-xl bg-gray-50 p-1.5 border border-gray-100 shrink-0"

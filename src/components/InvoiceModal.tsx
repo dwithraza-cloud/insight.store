@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import React, { useState } from 'react';
 import { 
   X, 
@@ -209,7 +210,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({ order, onClose }) =>
                     <td className="py-3 px-4 text-gray-400 font-mono">{idx + 1}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
-                        <img 
+                        <ProductImage
                           src={item.product.image} 
                           alt="" 
                           className="w-9 h-9 object-contain bg-white rounded-lg border border-gray-200 p-1 shrink-0" 

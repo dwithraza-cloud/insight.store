@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import React, { useState } from 'react';
 import { ShieldCheck, Truck, CreditCard, Banknote, Building2, CheckCircle2, ChevronLeft } from 'lucide-react';
 import { CartItem, Order } from '../types';
@@ -278,7 +279,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
           <div className="max-h-64 overflow-y-auto divide-y divide-gray-100 pr-1 space-y-2">
             {cartItems.map(({ product, quantity }) => (
               <div key={product.id} className="flex items-center gap-3 pt-2">
-                <img
+                <ProductImage
                   src={product.image}
                   alt={product.title}
                   className="w-12 h-12 rounded-lg bg-gray-50 object-contain p-1 border border-gray-100 shrink-0"

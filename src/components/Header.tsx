@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Search, 
@@ -172,7 +173,7 @@ export const Header: React.FC<HeaderProps> = ({
                       }}
                       className="w-full text-left p-2.5 px-3 flex items-center gap-3 hover:bg-[#f4f8ff] transition-colors border-b border-gray-50 last:border-0 cursor-pointer"
                     >
-                      <img
+                      <ProductImage
                         src={item.image}
                         alt={item.title}
                         className="w-10 h-10 object-contain rounded bg-white p-0.5 border border-gray-100 shrink-0"

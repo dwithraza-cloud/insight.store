@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import React, { useState } from 'react';
 import { Heart, Eye, ArrowLeftRight, ShoppingBag, Check, Star, ShieldCheck, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -83,7 +84,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </span>
           )}
 
-          <img
+          <ProductImage
             src={imageError ? getFallbackImage() : product.image}
             alt={product.title}
             onError={() => setImageError(true)}
@@ -254,7 +255,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
 
         {/* Product Image */}
-        <img
+        <ProductImage
           src={imageError ? getFallbackImage() : product.image}
           alt={product.title}
           onError={() => setImageError(true)}

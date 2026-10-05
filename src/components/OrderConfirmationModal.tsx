@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import React, { useState } from 'react';
 import { CheckCircle, Package, Truck, Phone, ArrowRight, Download, Check, Loader2 } from 'lucide-react';
 import { Order } from '../types';
@@ -111,7 +112,7 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
                   key={idx}
                   className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-lg border border-gray-200 shrink-0 text-xs"
                 >
-                  <img src={item.product.image} alt="" className="w-6 h-6 object-contain" />
+                  <ProductImage src={item.product.image} alt="" className="w-6 h-6 object-contain" />
                   <span className="font-semibold text-gray-800 max-w-[140px] truncate">{item.product.title}</span>
                   <span className="font-bold text-[#073faf]">x{item.quantity}</span>
                 </div>

@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import React from 'react';
 import { ArrowLeftRight, ShoppingBag, Trash2, Star, CheckCircle, XCircle } from 'lucide-react';
 import { Product } from '../types';
@@ -86,7 +87,7 @@ export const CompareScreen: React.FC<CompareScreenProps> = ({
                       <Trash2 className="w-4 h-4" />
                     </button>
                     <div className="w-24 h-24 bg-gray-50 rounded-xl p-2 mx-auto flex items-center justify-center">
-                      <img src={p.image} alt={p.title} className="w-full h-full object-contain mix-blend-multiply" />
+                      <ProductImage src={p.image} alt={p.title} className="w-full h-full object-contain mix-blend-multiply" />
                     </div>
                   </div>
                   <h4 className="font-bold text-sm text-[#101828] mb-1 line-clamp-2 text-center">{p.title}</h4>

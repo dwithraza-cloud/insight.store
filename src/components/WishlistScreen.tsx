@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import React from 'react';
 import { Heart, ShoppingBag, Trash2, ArrowRight } from 'lucide-react';
 import { Product } from '../types';
@@ -82,7 +83,7 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                 onClick={() => onQuickView(product)}
                 className="aspect-square bg-gray-50 rounded-xl p-4 flex items-center justify-center relative cursor-pointer group mb-3"
               >
-                <img
+                <ProductImage
                   src={product.image}
                   alt={product.title}
                   className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform"

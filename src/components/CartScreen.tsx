@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import React, { useState } from 'react';
 import { Trash2, ArrowRight, ShieldCheck, Tag, ShoppingBag, Plus, Minus } from 'lucide-react';
 import { CartItem } from '../types';
@@ -89,7 +90,7 @@ export const CartScreen: React.FC<CartScreenProps> = ({
                 {/* Product Thumbnail & Details */}
                 <div className="flex items-center gap-4 flex-1 min-w-0">
                   <div className="w-20 h-20 bg-gray-50 rounded-xl p-2 shrink-0 border border-gray-100 flex items-center justify-center">
-                    <img
+                    <ProductImage
                       src={product.image}
                       alt={product.title}
                       className="w-full h-full object-contain mix-blend-multiply"
