@@ -1,4 +1,4 @@
-export type PageRoute = 
+export type PageRoute =
   | 'home'
   | 'shop'
   | 'about'
@@ -8,7 +8,11 @@ export type PageRoute =
   | 'checkout'
   | 'compare'
   | 'wishlist'
-  | 'account';
+  | 'account'
+  | 'product'
+  | 'article'
+  | 'help'
+  | 'not-found';
 
 export interface Product {
   id: number;

@@ -1,3 +1,4 @@
+import { articlePath } from '../seo/catalog';
 import React, { useState } from 'react';
 import { Clock, Calendar, User, ArrowRight, X } from 'lucide-react';
 import { blogPostsData } from '../data/storeData';
@@ -67,7 +68,7 @@ export const BlogScreen: React.FC<BlogScreenProps> = ({ onNavigateHome }) => {
           >
             <div>
               {/* Cover Image */}
-              <div 
+              <div
                 onClick={() => setActiveArticle(post)}
                 className="w-full aspect-[16/10] overflow-hidden cursor-pointer bg-gray-100 relative"
               >
@@ -95,11 +96,10 @@ export const BlogScreen: React.FC<BlogScreenProps> = ({ onNavigateHome }) => {
                   </span>
                 </div>
 
-                <h2 
-                  onClick={() => setActiveArticle(post)}
+                <h2
                   className="font-black text-lg text-[#101828] group-hover:text-[#073faf] transition-colors leading-snug cursor-pointer line-clamp-2"
                 >
-                  {post.title}
+                  <a data-store-link href={articlePath(post)}>{post.title}</a>
                 </h2>
 
                 <p className="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-3">
@@ -110,13 +110,12 @@ export const BlogScreen: React.FC<BlogScreenProps> = ({ onNavigateHome }) => {
 
             {/* Read button */}
             <div className="p-6 pt-0 border-t border-gray-100/50 mt-2">
-              <button
-                onClick={() => setActiveArticle(post)}
+              <a data-store-link href={articlePath(post)}
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-[#073faf] hover:text-[#082f87] transition-colors cursor-pointer mt-4"
               >
                 <span>Read complete story</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </a>
             </div>
           </article>
         ))}
@@ -124,7 +123,7 @@ export const BlogScreen: React.FC<BlogScreenProps> = ({ onNavigateHome }) => {
 
       {/* Article Reader Modal */}
       {activeArticle && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto animate-fadeIn"
           onClick={() => setActiveArticle(null)}
         >

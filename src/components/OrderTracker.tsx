@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Search, 
-  Truck, 
-  Package, 
-  CheckCircle2, 
-  Clock, 
-  MapPin, 
-  User, 
-  Phone, 
-  Copy, 
-  Check, 
-  RotateCw, 
-  AlertCircle, 
+import {
+  Search,
+  Truck,
+  Package,
+  CheckCircle2,
+  Clock,
+  MapPin,
+  User,
+  Phone,
+  Copy,
+  Check,
+  RotateCw,
+  AlertCircle,
   ExternalLink,
   ShieldCheck,
   ChevronRight,
@@ -96,7 +96,7 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
       );
       const orderToExport: Order = existing || {
         id: activeTracking.orderId,
-        date: activeTracking.orderDate || 'Aug 2026',
+        date: activeTracking.checkpoints[0]?.timestamp || 'Date unavailable',
         status: (activeTracking.status as any) || 'Processing',
         items: [],
         total: activeTracking.totalAmount,
@@ -288,7 +288,7 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
                         : 'bg-blue-100/90 text-blue-800 border-blue-300'
                     }`}
                   >
-                    <span 
+                    <span
                       className={`w-2 h-2 rounded-full shrink-0 ${
                         activeTracking.statusCode === 'delivered' || activeTracking.status === 'Delivered'
                           ? 'bg-emerald-600'
@@ -299,7 +299,7 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
                           : activeTracking.statusCode === 'out_for_delivery' || activeTracking.status === 'Out for Delivery'
                           ? 'bg-purple-600 animate-pulse'
                           : 'bg-blue-600 animate-pulse'
-                      }`} 
+                      }`}
                     />
                     {activeTracking.status}
                   </span>
@@ -370,7 +370,7 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
                 <span>{activeTracking.statusCode === 'cancelled' ? 'Cancelled' : 'Delivered'}</span>
               </div>
               <div className="w-full h-2.5 rounded-full bg-gray-100 overflow-hidden relative">
-                <div 
+                <div
                   className={`h-full transition-all duration-700 ease-out rounded-full ${
                     activeTracking.statusCode === 'delivered'
                       ? 'bg-emerald-500'
@@ -460,7 +460,7 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
                 return (
                   <div key={cp.id} className="relative group">
                     {/* Stepper Node Indicator */}
-                    <div 
+                    <div
                       className={`absolute -left-6 sm:-left-8 top-0.5 w-6 sm:w-8 h-6 sm:h-8 rounded-full flex items-center justify-center border-2 transition-all ${
                         isCurrent
                           ? 'bg-[#00d7ef] border-[#073faf] text-white ring-4 ring-cyan-100 shadow-md scale-110'

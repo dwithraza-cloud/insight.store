@@ -1,14 +1,15 @@
+import { categoryDescription, categoryPath, activeDepartments } from '../seo/catalog';
 import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  Filter, 
-  X, 
-  SlidersHorizontal, 
-  ChevronLeft, 
-  ChevronRight, 
-  Search, 
-  Grid3X3, 
-  LayoutGrid, 
-  List, 
+import {
+  Filter,
+  X,
+  SlidersHorizontal,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  Grid3X3,
+  LayoutGrid,
+  List,
   Sparkles,
   Check
 } from 'lucide-react';
@@ -123,7 +124,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
       // Search keyword
       if (searchFilter.trim()) {
         const q = searchFilter.toLowerCase();
-        const matches = 
+        const matches =
           p.title.toLowerCase().includes(q) ||
           p.brand.toLowerCase().includes(q) ||
           p.category.toLowerCase().includes(q) ||
@@ -194,7 +195,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
     setCurrentPage(1);
   };
 
-  const hasActiveFilters = 
+  const hasActiveFilters =
     (selectedCategory !== 'all' && selectedCategory !== 'All') ||
     searchFilter.trim() !== '' ||
     maxPrice < 250000 ||
@@ -212,8 +213,8 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
       <div className="bg-white border-b border-slate-200/80 sticky top-[72px] z-20 backdrop-blur-md bg-white/95">
         <div className="wrap py-3.5 flex items-center justify-between">
           <nav className="flex items-center gap-2 text-xs font-medium text-slate-500">
-            <button 
-              onClick={onNavigateHome} 
+            <button
+              onClick={onNavigateHome}
               className="hover:text-[#073faf] transition-colors cursor-pointer"
             >
               Home
@@ -242,13 +243,15 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
       </div>
 
       <div className="wrap py-6 md:py-8">
+        <header className="mb-7 max-w-3xl"><h1 className="text-3xl font-extrabold mb-3">{selectedCategory.toLowerCase() === 'all' ? 'Shop all products' : `${selectedCategory} in Pakistan`}</h1><p className="text-sm text-slate-600 leading-relaxed">{selectedCategory.toLowerCase() === 'all' ? 'Browse the Insight Store catalog. Compare product details, current prices in PKR and availability across fashion, home, digital and tech collections.' : categoryDescription(selectedCategory)}</p></header>
+        <nav aria-label="Shop categories" className="flex gap-2 flex-wrap mb-6">{activeDepartments.map(d => <a key={d.id} data-store-link href={categoryPath(d.name)} className="rounded-lg bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700">{d.name}</a>)}</nav>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* =========================================================================
               LEFT SIDEBAR (Matches User's Screenshot Exactly)
           ========================================================================= */}
           {showSidebar && (
-            <motion.aside 
-              initial={{ opacity: 0, x: -10 }}
+            <motion.aside
+              initial={false}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.25 }}
@@ -279,7 +282,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
                   className="w-full pl-3.5 pr-8 py-2 text-xs text-slate-800 bg-white border border-slate-200 rounded-xl outline-none focus:border-[#073faf] focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-400"
                 />
                 {searchFilter ? (
-                  <button 
+                  <button
                     onClick={() => setSearchFilter('')}
                     className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                   >
@@ -322,7 +325,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
                 </h4>
                 <div className="space-y-1 max-h-80 overflow-y-auto pr-1 no-scrollbar">
                   {SHOP_CATEGORIES.map((cat) => {
-                    const isSelected = 
+                    const isSelected =
                       (cat === 'All' && (selectedCategory === 'All' || selectedCategory === 'all' || !selectedCategory)) ||
                       selectedCategory.toLowerCase() === cat.toLowerCase();
 
@@ -338,8 +341,8 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
                       >
                         {/* Custom Round Radio matching screenshot */}
                         <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-colors ${
-                          isSelected 
-                            ? 'border-[#073faf] bg-white' 
+                          isSelected
+                            ? 'border-[#073faf] bg-white'
                             : 'border-slate-300 group-hover:border-slate-400 bg-white'
                         }`}>
                           {isSelected && (
@@ -491,8 +494,8 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
 
             {/* Active Filter Chips / SaaS Tags Bar */}
             {hasActiveFilters && (
-              <motion.div 
-                initial={{ opacity: 0, y: -6 }}
+              <motion.div
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 className="flex items-center gap-2 flex-wrap text-xs pt-1"
               >
@@ -566,7 +569,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`${currentPage}-${selectedCategory}-${sortBy}-${viewMode}`}
-                  initial={{ opacity: 0 }}
+                  initial={false}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.25 }}
@@ -594,8 +597,8 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
                 </motion.div>
               </AnimatePresence>
             ) : (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.98 }}
+              <motion.div
+                initial={false}
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200 p-8 space-y-4"
               >
@@ -680,7 +683,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
           <div className="fixed inset-0 z-50 flex lg:hidden">
             {/* Backdrop */}
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={false}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileFilterOpen(false)}
@@ -689,7 +692,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
 
             {/* Slide-in Drawer */}
             <motion.div
-              initial={{ x: '-100%' }}
+              initial={false}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 220 }}

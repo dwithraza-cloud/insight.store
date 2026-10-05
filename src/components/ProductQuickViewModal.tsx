@@ -1,14 +1,15 @@
+import { productPath } from '../seo/catalog';
 import { ProductImage } from './ProductImage';
 import React, { useState, useEffect } from 'react';
-import { 
-  X, 
-  Star, 
-  Heart, 
-  ArrowLeftRight, 
-  ShoppingBag, 
-  ShieldCheck, 
-  Truck, 
-  Check, 
+import {
+  X,
+  Star,
+  Heart,
+  ArrowLeftRight,
+  ShoppingBag,
+  ShieldCheck,
+  Truck,
+  Check,
   RotateCcw,
   Zap,
   Info,
@@ -95,7 +96,7 @@ export const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div 
+      <div
         className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-slate-950/70 backdrop-blur-sm overflow-y-auto"
         onClick={onClose}
         id="product-quick-view-overlay"
@@ -176,7 +177,7 @@ export const ProductQuickViewModal: React.FC<ProductQuickViewModalProps> = ({
                 <div>
                   {/* Title */}
                   <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-snug mb-2">
-                    {product.title}
+                    <a data-store-link href={productPath(product)}>{product.title}</a>
                   </h2>
 
                   {/* Rating & Stock Status */}

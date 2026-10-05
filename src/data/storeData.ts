@@ -108,6 +108,39 @@ export const promoBannersData = [
 ];
 
 export const blogPostsData: BlogPost[] = [
+{
+  "id": "guide-bedsheets",
+  "tag": "Bedsheets",
+  "author": "Insight Editorial",
+  "title": "How to choose cotton bedsheets in Pakistan",
+  "excerpt": "Measure your mattress and compare fabric, set contents and care instructions before choosing single or king-size cotton bedsheets.",
+  "content": "Start with the mattress, not the label. Measure its width, length and depth, then compare those measurements with the dimensions on the product listing. A flat sheet needs enough extra fabric to tuck in, while a fitted sheet needs a pocket that can accommodate the mattress depth. Single, double and king-size labels can vary between sellers.\n\nNext, check what comes in the set. A photograph may show a complete styled bed, but the listing should tell you whether pillowcases, a flat sheet, a fitted sheet or other pieces are included. Compare the price for the actual listed set rather than assuming every item in the photograph is supplied.\n\nRead the fabric description carefully. Pure cotton, cotton blends and synthetic fabrics are different products. If the listing only says cotton without giving composition, ask the store to confirm it. Weave, thickness and finish can affect how a sheet feels; a large thread-count number alone does not describe the whole fabric.\n\nCheck care instructions before purchasing. Ask whether the fabric needs a gentle wash, whether dark colours should be washed separately and whether tumble drying is suitable. Follow the supplied label and allow for any shrinkage guidance given by the seller.\n\nFinally, compare the current price in PKR, delivery charges and return conditions. Confirm the exact colour, print and size before ordering. Browse the Bedsheets collection to compare the details of the available sets.",
+  "image": "/images/banner-home-living.webp",
+  "date": "October 5, 2026",
+  "readTime": "3 min read"
+},
+{
+  "id": "guide-clothing",
+  "tag": "Clothing",
+  "author": "Insight Editorial",
+  "title": "What to check before buying lawn suits online",
+  "excerpt": "Compare stitched versus unstitched suits, fabric details and included pieces so the outfit you order matches what you need.",
+  "content": "First, establish whether the suit is stitched, ready to wear or unstitched. An unstitched suit supplies fabric and may require separate tailoring. A ready-to-wear outfit should provide size measurements rather than only a small, medium or large label.\n\nFor an unstitched suit, check the length of each fabric piece. Ask what is supplied for the shirt, trousers and dupatta. A three-piece label usually refers to three components, but their materials and lengths should be confirmed from the listing.\n\nRead how the design is made. Printed, embroidered and embellished suits can have different care requirements. Look for clear photographs of the actual fabric and ask whether any lining, lace or accessories shown are included. Screen settings and lighting can affect the appearance of colours.\n\nFor a stitched outfit, compare the listed chest, shoulder, sleeve and length measurements with a similar outfit that already fits you. If a measurement is missing, confirm it before payment rather than relying only on the model photograph.\n\nCheck the current price, delivery estimate and exchange eligibility before placing your order. If you need an outfit for a particular occasion, allow time for delivery and any tailoring. Explore the Ladies & Gents Clothes collection and compare the information on each product page.",
+  "image": "/images/category-fashion.webp",
+  "date": "October 5, 2026",
+  "readTime": "3 min read"
+},
+{
+  "id": "guide-digital",
+  "tag": "Digital Products",
+  "author": "Insight Editorial",
+  "title": "Digital subscriptions: what to confirm before ordering",
+  "excerpt": "Check the plan, duration, account requirements and activation details before buying streaming, creative software or AI subscriptions.",
+  "content": "A subscription title is only the starting point. Confirm the exact plan, how long access lasts and which features are included. Product names such as Premium or Pro can refer to different plans, so compare the stated features with your intended use.\n\nAsk how activation works. Confirm whether the subscription is applied to your own account or supplied through another access arrangement. Check supported regions, device limits, simultaneous usage limits and any restrictions relevant to your work or household.\n\nUnderstand when the subscription period begins: at payment, activation or first use. Ask how long activation is expected to take and what information is required. For creative software and AI tools, confirm any usage credits or limits that apply to the plan.\n\nCheck renewal and cancellation terms. Do not assume that an advertised monthly duration automatically renews or can be paused. Confirm the available support and the refund or replacement conditions, especially once access has been activated.\n\nCompare the final price in PKR and verify the order details before payment. Browse the Digital Products collection for listed plans and durations, and contact the store whenever an important requirement is unclear.",
+  "image": "/images/category-gadgets.webp",
+  "date": "October 5, 2026",
+  "readTime": "3 min read"
+},
   {
     id: 'blog-1',
     tag: 'Future-ready tech',

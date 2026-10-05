@@ -1,3 +1,4 @@
+import { routePath, categoryPath, activeDepartments } from '../seo/catalog';
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, ArrowRight, ShieldCheck, Check } from 'lucide-react';
 import { PageRoute } from '../types';
@@ -29,16 +30,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onSelectDepartment }
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/10">
           {/* Brand Col */}
           <div className="lg:col-span-4 space-y-5">
-            <button
-              onClick={() => onNavigate('home')}
+            <a data-store-link href={routePath('home')}
+
               className="text-left cursor-pointer focus:outline-none group inline-block"
               aria-label="Insight Store Home"
             >
-              <Logo 
-                variant="white" 
-                className="h-10 md:h-[42px] w-auto max-w-[190px] object-contain transition-transform group-hover:scale-[1.02] duration-150" 
+              <Logo
+                variant="white"
+                className="h-10 md:h-[42px] w-auto max-w-[190px] object-contain transition-transform group-hover:scale-[1.02] duration-150"
               />
-            </button>
+            </a>
 
             <p className="text-xs sm:text-sm text-blue-100/80 leading-relaxed max-w-sm">
               Delivering authentic technology, modern kitchenware, toys, electronics, and lifestyle essentials to homes across Pakistan with nationwide insured courier shipping.
@@ -67,34 +68,35 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onSelectDepartment }
             </h4>
             <ul className="space-y-2.5 text-xs text-blue-100/90 font-medium">
               <li>
-                <button onClick={() => onNavigate('home')} className="hover:text-white transition-colors cursor-pointer">
+                <a data-store-link href={routePath('home')}  className="hover:text-white transition-colors cursor-pointer">
                   Home
-                </button>
+                </a>
               </li>
               <li>
-                <button onClick={() => onNavigate('shop')} className="hover:text-white transition-colors cursor-pointer">
+                <a data-store-link href={routePath('shop')}  className="hover:text-white transition-colors cursor-pointer">
                   Shop Catalog
-                </button>
+                </a>
               </li>
               <li>
-                <button onClick={() => onNavigate('about')} className="hover:text-white transition-colors cursor-pointer">
+                <a data-store-link href={routePath('about')}  className="hover:text-white transition-colors cursor-pointer">
                   About Us
-                </button>
+                </a>
               </li>
               <li>
-                <button onClick={() => onNavigate('blog')} className="hover:text-white transition-colors cursor-pointer">
+                <a data-store-link href={routePath('blog')}  className="hover:text-white transition-colors cursor-pointer">
                   Insight Editorial
-                </button>
+                </a>
               </li>
               <li>
-                <button onClick={() => onNavigate('contact')} className="hover:text-white transition-colors cursor-pointer">
+                <a data-store-link href={routePath('contact')}  className="hover:text-white transition-colors cursor-pointer">
                   Contact Support
-                </button>
+                </a>
               </li>
+              <li><a data-store-link href="/help/" className="hover:text-white transition-colors">Shopping & delivery help</a></li>
               <li>
-                <button onClick={() => onNavigate('account')} className="hover:text-white transition-colors cursor-pointer">
+                <a data-store-link href={routePath('account')}  className="hover:text-white transition-colors cursor-pointer">
                   My Account
-                </button>
+                </a>
               </li>
             </ul>
           </div>
@@ -105,17 +107,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onSelectDepartment }
               Departments
             </h4>
             <div className="grid grid-cols-1 gap-2 text-xs text-blue-100/90 font-medium">
-              {departmentsData.slice(0, 6).map((dept) => (
-                <button
+              {activeDepartments.slice(0, 6).map((dept) => (
+                <a data-store-link href={categoryPath(dept.name)}
                   key={dept.id}
-                  onClick={() => {
-                    onSelectDepartment(dept.name);
-                    onNavigate('shop');
-                  }}
+
                   className="text-left hover:text-white transition-colors cursor-pointer truncate"
                 >
                   {dept.name}
-                </button>
+                </a>
               ))}
             </div>
           </div>

@@ -23,10 +23,37 @@ import { AccountScreen } from './components/AccountScreen';
 import { Footer } from './components/Footer';
 import { Toast, ToastMessage } from './components/Toast';
 import { ArrowRight, Star } from 'lucide-react';
+import { resolveLocation, routePath, categoryPath, articlePath } from './seo/catalog';
+import { updateMetadata } from './seo/metadata';
+import { ProductScreen } from './components/ProductScreen';
+import { ArticleScreen } from './components/ArticleScreen';
+import { ShoppingHelp } from './components/ShoppingHelp';
 
-export default function App() {
-  const [currentRoute, setCurrentRoute] = useState<PageRoute>('home');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+export default function App({ initialPath }: { initialPath?: string } = {}) {
+  const [location, setLocation] = useState(() => resolveLocation(initialPath ?? (typeof window === 'undefined' ? '/' : window.location.pathname)));
+  const currentRoute = location.route;
+  const selectedCategory = location.category;
+  const navigate = (path: string) => {
+    if (window.location.pathname !== path) window.history.pushState({}, '', path);
+    setLocation(resolveLocation(path));
+    setQuickViewProduct(null);
+  };
+  const setCurrentRoute = (route: PageRoute) => navigate(routePath(route));
+  const setSelectedCategory = (category: string) => navigate(categoryPath(category));
+  useEffect(() => {
+    const pop = () => { setLocation(resolveLocation(window.location.pathname)); setQuickViewProduct(null); };
+    window.addEventListener('popstate', pop);
+    return () => window.removeEventListener('popstate', pop);
+  }, []);
+  useEffect(() => { updateMetadata(location.path); window.scrollTo({ top: 0, behavior: 'instant' }); }, [location.path]);
+  const handleLink = (e: React.MouseEvent) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const link = (e.target as Element).closest<HTMLAnchorElement>('a[data-store-link]');
+    if (!link || link.target || link.hasAttribute('download')) return;
+    const url = new URL(link.href);
+    if (url.origin !== window.location.origin) return;
+    e.preventDefault(); navigate(url.pathname);
+  };
   const [cart, setCart] = useState<CartItem[]>(() => {
     // Initial demo cart items so user experiences immediate functionality
     const p1 = productsData.find((p) => p.id === 1) || productsData[0];
@@ -132,7 +159,7 @@ export default function App() {
 
   // Scroll to top on route change
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentRoute]);
 
   const showToast = (text: string, type: 'success' | 'info' | 'error' = 'success') => {
@@ -284,14 +311,13 @@ export default function App() {
   const bestSellers = productsData.filter((p) => p.badge === 'HOT' || p.badge === 'BESTSELLER' || p.badge === 'PURE COTTON' || p.rating >= 4.8).slice(0, 4);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#101828]">
+    <div onClick={handleLink} className="min-h-screen flex flex-col bg-white text-[#101828]">
       {/* Global Header */}
       <Header
         currentRoute={currentRoute}
         onNavigate={setCurrentRoute}
         onSelectCategory={(cat) => {
           setSelectedCategory(cat);
-          setCurrentRoute('shop');
         }}
         onSelectProduct={(p) => {
           setQuickViewProduct(p);
@@ -305,13 +331,18 @@ export default function App() {
 
       {/* Main Content Body */}
       <main className="flex-1">
+        {currentRoute === 'product' && location.product && <ProductScreen key={location.product.id} product={location.product} onAddToCart={handleAddToCart} onBuyNow={handleBuyNow} />}
+        {currentRoute === 'article' && location.article && <ArticleScreen article={location.article} />}
+        {currentRoute === 'help' && <ShoppingHelp />}
+        {currentRoute === 'not-found' && <div className="wrap py-20"><h1 className="text-3xl font-bold mb-4">Page not found</h1><p className="text-slate-600 mb-6">This product or page could not be found.</p><a data-store-link href="/shop/" className="text-blue-700 underline">Browse the catalog</a></div>}
+
         {currentRoute === 'home' && (
           <div className="home-view">
+            <section className="wrap pt-7 pb-5"><h1 className="text-2xl md:text-3xl font-extrabold">Online shopping in Pakistan with Insight Store</h1><p className="text-sm text-slate-600 mt-2">Browse bedsheets, ladies and gents clothing, digital subscriptions, kitchen essentials and everyday gadgets.</p></section>
             {/* 1. Hero Carousel */}
             <Hero
               onShopCategory={(cat) => {
                 setSelectedCategory(cat);
-                setCurrentRoute('shop');
               }}
               onExploreStory={() => setCurrentRoute('about')}
             />
@@ -323,11 +354,9 @@ export default function App() {
             <DepartmentGrid
               onSelectDepartment={(deptName) => {
                 setSelectedCategory(deptName);
-                setCurrentRoute('shop');
               }}
               onViewAll={() => {
                 setSelectedCategory('all');
-                setCurrentRoute('shop');
               }}
             />
 
@@ -383,7 +412,6 @@ export default function App() {
                   <button
                     onClick={() => {
                       setSelectedCategory('all');
-                      setCurrentRoute('shop');
                     }}
                     className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#073faf] hover:bg-[#082f87] text-white font-bold text-xs shadow-md hover:scale-105 transition-all cursor-pointer"
                   >
@@ -398,7 +426,6 @@ export default function App() {
             <PromoBanners
               onSelectCategory={(cat) => {
                 setSelectedCategory(cat);
-                setCurrentRoute('shop');
               }}
             />
 
@@ -406,7 +433,6 @@ export default function App() {
             <ExperienceBanner
               onShopNow={() => {
                 setSelectedCategory('Electronics');
-                setCurrentRoute('shop');
               }}
             />
 
@@ -425,7 +451,6 @@ export default function App() {
                   <button
                     onClick={() => {
                       setSelectedCategory('all');
-                      setCurrentRoute('shop');
                     }}
                     className="text-xs font-bold text-[#073faf] hover:underline cursor-pointer flex items-center gap-1"
                   >
@@ -476,7 +501,7 @@ export default function App() {
                   {blogPostsData.slice(0, 3).map((post) => (
                     <div
                       key={post.id}
-                      onClick={() => setCurrentRoute('blog')}
+                      onClick={(e) => { if (!(e.target as Element).closest('a')) navigate(articlePath(post)); }}
                       className="group cursor-pointer space-y-3"
                     >
                       <div className="w-full aspect-[16/10] rounded-2xl overflow-hidden bg-gray-100">
@@ -490,7 +515,7 @@ export default function App() {
                         {post.tag}
                       </span>
                       <h3 className="font-bold text-base text-[#101828] group-hover:text-[#073faf] transition-colors leading-snug line-clamp-2">
-                        {post.title}
+                        <a data-store-link href={articlePath(post)}>{post.title}</a>
                       </h3>
                       <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">
                         {post.excerpt}
@@ -650,7 +675,6 @@ export default function App() {
         onNavigate={setCurrentRoute}
         onSelectDepartment={(dept) => {
           setSelectedCategory(dept);
-          setCurrentRoute('shop');
         }}
       />
     </div>

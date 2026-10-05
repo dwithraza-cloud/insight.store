@@ -1,15 +1,16 @@
+import { categoryPath, activeDepartments } from '../seo/catalog';
 import React, { useRef } from 'react';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
+import {
+  ChevronLeft,
+  ChevronRight,
   ArrowRight,
-  Utensils, 
-  Sparkles, 
-  Gamepad2, 
-  Tv, 
-  Smartphone, 
-  Layers, 
-  Gem, 
+  Utensils,
+  Sparkles,
+  Gamepad2,
+  Tv,
+  Smartphone,
+  Layers,
+  Gem,
   Wind,
   CookingPot,
   Bed,
@@ -139,14 +140,13 @@ export const DepartmentGrid: React.FC<DepartmentGridProps> = ({
             className="flex items-stretch gap-4 overflow-x-auto scroll-smooth pb-4 pt-1 px-1 no-scrollbar snap-x snap-mandatory"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {departmentsData.map((dept, idx) => (
-              <motion.div
+            {activeDepartments.map((dept, idx) => (
+              <motion.a data-store-link href={categoryPath(dept.name)}
                 key={dept.id}
-                initial={{ opacity: 0, y: 12 }}
+                initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.35, delay: idx * 0.05 }}
-                onClick={() => onSelectDepartment(dept.name)}
                 className="flex-shrink-0 w-[180px] sm:w-[210px] md:w-[224px] lg:w-[242px] bg-white rounded-2xl p-3 sm:p-3.5 border border-slate-200/80 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 flex flex-col group cursor-pointer snap-start relative hover:-translate-y-1"
               >
                 {/* Category Image Container */}
@@ -174,7 +174,7 @@ export const DepartmentGrid: React.FC<DepartmentGridProps> = ({
                     {dept.count} {dept.count === 1 ? 'product' : 'products'}
                   </p>
                 </div>
-              </motion.div>
+              </motion.a>
             ))}
           </div>
         </div>

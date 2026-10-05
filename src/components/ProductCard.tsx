@@ -1,3 +1,4 @@
+import { productPath } from '../seo/catalog';
 import { ProductImage } from './ProductImage';
 import React, { useState } from 'react';
 import { Heart, Eye, ArrowLeftRight, ShoppingBag, Check, Star, ShieldCheck, Zap } from 'lucide-react';
@@ -67,14 +68,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   if (layout === 'list') {
     return (
       <motion.article
-        initial={{ opacity: 0, y: 12 }}
+        initial={false}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.3 }}
         className="group bg-white border border-slate-200/80 hover:border-blue-400/80 rounded-2xl p-4 flex flex-col sm:flex-row items-stretch gap-5 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-0.5 relative"
       >
         {/* Left image thumbnail */}
-        <div 
+        <div
           onClick={() => onQuickView(product)}
           className="relative w-full sm:w-48 sm:min-w-[192px] aspect-square bg-slate-50/50 rounded-xl overflow-hidden border border-slate-100 flex items-center justify-center cursor-pointer group-hover:opacity-95 group-hover:border-blue-200 transition-all"
         >
@@ -116,11 +117,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               )}
             </div>
 
-            <h3 
-              onClick={() => onQuickView(product)}
+            <h3
               className="font-bold text-base text-slate-900 group-hover:text-[#073faf] transition-colors cursor-pointer mb-2 leading-snug"
             >
-              {product.title}
+              <a data-store-link className="block line-clamp-2" href={productPath(product)}>{product.title}</a>
             </h3>
 
             <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-3 max-w-2xl font-normal">
@@ -233,14 +233,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   // Grid layout matching the user screenshot
   return (
     <motion.article
-      initial={{ opacity: 0, y: 14 }}
+      initial={false}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.35 }}
       className="group bg-white border border-slate-200/80 hover:border-blue-300/90 rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/8 hover:-translate-y-1 relative"
     >
       {/* Product Image Container */}
-      <div 
+      <div
         onClick={() => onQuickView(product)}
         className="relative w-full aspect-square bg-slate-50/50 rounded-xl overflow-hidden mb-3 border border-slate-100 flex items-center justify-center cursor-pointer transition-all duration-300 group-hover:border-blue-200"
         role="button"
@@ -335,11 +335,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
 
           {/* Product Title */}
-          <h3 
-            onClick={() => onQuickView(product)}
-            className="font-bold text-sm sm:text-[15px] text-slate-900 group-hover:text-[#073faf] transition-colors line-clamp-2 leading-snug cursor-pointer mb-2 min-h-[42px]"
+          <h3
+            className="font-bold text-sm sm:text-[15px] text-slate-900 group-hover:text-[#073faf] transition-colors leading-snug cursor-pointer mb-2 min-h-[42px]"
           >
-            {product.title}
+            <a data-store-link className="block line-clamp-2" href={productPath(product)}>{product.title}</a>
           </h3>
         </div>
 

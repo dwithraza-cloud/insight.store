@@ -45,7 +45,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopCategory, onExploreStory }) =>
   const slide = heroSlidesData[currentSlide];
 
   return (
-    <section 
+    <section
       id="hero-section"
       className="relative overflow-hidden text-white min-h-[460px] sm:min-h-[500px] lg:min-h-[540px] flex items-center select-none"
       onMouseEnter={() => setIsPaused(true)}
@@ -79,7 +79,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopCategory, onExploreStory }) =>
           <AnimatePresence mode="wait">
             <motion.div
               key={slide.id}
-              initial={{ opacity: 0, y: 16 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.4, ease: 'easeOut' }}
@@ -90,9 +90,9 @@ export const Hero: React.FC<HeroProps> = ({ onShopCategory, onExploreStory }) =>
               </span>
 
               {/* Main Headline matching screenshot: clean bold white typography */}
-              <h1 className="text-white font-extrabold text-3xl sm:text-5xl lg:text-[56px] leading-[1.12] tracking-tight mb-4 drop-shadow-sm">
+              <h2 className="text-white font-extrabold text-3xl sm:text-5xl lg:text-[56px] leading-[1.12] tracking-tight mb-4 drop-shadow-sm">
                 {slide.title}
-              </h1>
+              </h2>
 
               {/* Subtitle Description */}
               <p className="text-slate-200/90 text-sm sm:text-base leading-relaxed font-normal max-w-xl mb-8">
@@ -133,7 +133,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopCategory, onExploreStory }) =>
       </div>
 
       {/* Vertical Pill / Dot Carousel Indicators on Far-Right matching screenshot */}
-      <div 
+      <div
         className="absolute right-4 sm:right-8 lg:right-12 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-2.5 py-2 px-1"
         aria-label="Slide navigation"
       >

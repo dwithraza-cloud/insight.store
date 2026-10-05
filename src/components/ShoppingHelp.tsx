@@ -1,0 +1,11 @@
+import React from 'react';
+export function ShoppingHelp() {
+  const sections = [
+    ['Product details', 'Check the product title, listed specifications, size, material and included pieces. If an important detail is missing, contact the store before placing your order. Images help you compare options; confirm the exact colour or variant you need.'],
+    ['Price and payment', 'Product prices are displayed in Pakistani rupees (PKR). Review the checkout total, including any delivery charge, before submitting an order. Confirm the payment instructions with the store before transferring funds.'],
+    ['Physical product delivery', 'Ask for the delivery estimate for your city, courier options, delivery charges and any tracking information available for your order. Delivery timing can depend on stock and destination.'],
+    ['Digital subscriptions and activation', 'Confirm the subscription duration, plan features, supported region, account type and activation requirements before paying. Check whether access uses your own account, whether renewal is automatic, and what support is included. Never share a password or one-time code unless you understand the activation process and trust the recipient.'],
+    ['Returns, exchanges and cancellations', 'Confirm the current return or exchange terms with the store before ordering. Ask about eligibility, deadlines, product condition requirements and return shipping costs. Digital products may have different conditions once activated.'],
+  ];
+  return <div className="wrap py-10 md:py-14"><div className="max-w-3xl"><nav aria-label="Breadcrumb" className="text-xs text-slate-500 mb-5"><a data-store-link href="/">Home</a> / Shopping help</nav><h1 className="text-3xl md:text-4xl font-extrabold mb-5">Shopping, delivery & activation help</h1><p className="text-slate-600 mb-8 leading-relaxed">Use this checklist to confirm the details that matter before shopping at Insight Store.</p>{sections.map(([title, text]) => <section key={title} className="mb-7"><h2 className="text-xl font-bold mb-3">{title}</h2><p className="text-slate-600 leading-relaxed">{text}</p></section>)}<a data-store-link href="/contact/" className="inline-block rounded-xl bg-[#073faf] text-white px-6 py-3 font-semibold">Ask a product or order question</a></div></div>;
+}

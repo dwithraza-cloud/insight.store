@@ -1,14 +1,15 @@
+import { routePath, categoryPath, activeDepartments } from '../seo/catalog';
 import { ProductImage } from './ProductImage';
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Search, 
-  PhoneCall, 
-  Menu, 
-  X, 
-  ChevronDown, 
-  Heart, 
-  ArrowLeftRight, 
-  ShoppingBag, 
+import {
+  Search,
+  PhoneCall,
+  Menu,
+  X,
+  ChevronDown,
+  Heart,
+  ArrowLeftRight,
+  ShoppingBag,
   User,
   Sparkles,
   CookingPot,
@@ -109,16 +110,16 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="wrap">
           <div className="header-main flex items-center justify-between gap-4 h-[86px]">
             {/* Brand Logo */}
-            <button 
-              onClick={() => onNavigate('home')}
+            <a data-store-link href={routePath('home')}
+
               className="logo-btn flex items-center text-left focus:outline-none cursor-pointer group shrink-0"
               aria-label="Insight Store Home"
             >
-              <Logo 
-                variant="white" 
-                className="h-9 sm:h-10 md:h-[42px] w-auto max-w-[170px] sm:max-w-[200px] object-contain transition-transform group-hover:scale-[1.02] duration-150" 
+              <Logo
+                variant="white"
+                className="h-9 sm:h-10 md:h-[42px] w-auto max-w-[170px] sm:max-w-[200px] object-contain transition-transform group-hover:scale-[1.02] duration-150"
               />
-            </button>
+            </a>
 
             {/* Live Search Form */}
             <div ref={searchRef} className="search-wrap hidden md:flex items-center flex-1 max-w-[690px] h-[46px] bg-white rounded-full relative px-1 shadow-md">
@@ -128,7 +129,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="bg-transparent border-0 border-r border-gray-200 text-xs font-semibold text-gray-700 px-4 h-full outline-none cursor-pointer"
               >
                 <option value="all">All Departments</option>
-                {departmentsData.map((dept) => (
+                {activeDepartments.map((dept) => (
                   <option key={dept.id} value={dept.name}>
                     {dept.name}
                   </option>
@@ -191,7 +192,6 @@ export const Header: React.FC<HeaderProps> = ({
                     type="button"
                     onClick={() => {
                       setIsSearchFocused(false);
-                      onNavigate('shop');
                     }}
                     className="w-full text-center py-2 text-xs font-semibold text-[#073faf] bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer"
                   >
@@ -203,8 +203,8 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Hotline & Mobile Controls */}
             <div className="flex items-center gap-4">
-              <a 
-                href="tel:03145338340" 
+              <a
+                href="tel:03145338340"
                 className="hotline hidden lg:flex items-center gap-3 text-white no-underline hover:opacity-95"
               >
                 <span className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-[#00d7ef]">
@@ -247,13 +247,12 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Dropdown Menu */}
               {isCategoryMenuOpen && (
                 <div className="absolute top-16 left-0 w-72 bg-white border border-[#e7eaf0] rounded-b-xl shadow-2xl py-2 z-50">
-                  {departmentsData.map((dept) => (
+                  {activeDepartments.map((dept) => (
                     <button
                       key={dept.id}
                       onClick={() => {
                         onSelectCategory(dept.name);
                         setIsCategoryMenuOpen(false);
-                        onNavigate('shop');
                       }}
                       className="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-[#f4f8ff] text-sm text-gray-800 transition-colors border-b border-gray-50 last:border-0 cursor-pointer"
                     >
@@ -272,53 +271,53 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center gap-8 mx-auto">
-              <button
-                onClick={() => onNavigate('home')}
+              <a data-store-link href={routePath('home')}
+
                 className={`font-semibold text-sm transition-colors cursor-pointer py-1 ${
                   currentRoute === 'home' ? 'text-[#073faf] border-b-2 border-[#073faf]' : 'text-gray-700 hover:text-[#073faf]'
                 }`}
               >
                 Home
-              </button>
-              <button
-                onClick={() => onNavigate('shop')}
+              </a>
+              <a data-store-link href={routePath('shop')}
+
                 className={`font-semibold text-sm transition-colors cursor-pointer py-1 ${
                   currentRoute === 'shop' ? 'text-[#073faf] border-b-2 border-[#073faf]' : 'text-gray-700 hover:text-[#073faf]'
                 }`}
               >
                 Shop
-              </button>
-              <button
-                onClick={() => onNavigate('about')}
+              </a>
+              <a data-store-link href={routePath('about')}
+
                 className={`font-semibold text-sm transition-colors cursor-pointer py-1 ${
                   currentRoute === 'about' ? 'text-[#073faf] border-b-2 border-[#073faf]' : 'text-gray-700 hover:text-[#073faf]'
                 }`}
               >
                 About
-              </button>
-              <button
-                onClick={() => onNavigate('blog')}
+              </a>
+              <a data-store-link href={routePath('blog')}
+
                 className={`font-semibold text-sm transition-colors cursor-pointer py-1 ${
                   currentRoute === 'blog' ? 'text-[#073faf] border-b-2 border-[#073faf]' : 'text-gray-700 hover:text-[#073faf]'
                 }`}
               >
                 Blog
-              </button>
-              <button
-                onClick={() => onNavigate('contact')}
+              </a>
+              <a data-store-link href={routePath('contact')}
+
                 className={`font-semibold text-sm transition-colors cursor-pointer py-1 ${
                   currentRoute === 'contact' ? 'text-[#073faf] border-b-2 border-[#073faf]' : 'text-gray-700 hover:text-[#073faf]'
                 }`}
               >
                 Contact
-              </button>
+              </a>
             </nav>
 
             {/* Quick Action Badges */}
             <div className="nav-actions flex items-center gap-4">
               {/* Compare */}
-              <button
-                onClick={() => onNavigate('compare')}
+              <a data-store-link href={routePath('compare')}
+
                 className="relative p-2 text-gray-700 hover:text-[#073faf] transition-colors cursor-pointer"
                 title="Compare Products"
                 aria-label="Compare Products"
@@ -329,11 +328,11 @@ export const Header: React.FC<HeaderProps> = ({
                     {compareCount}
                   </span>
                 )}
-              </button>
+              </a>
 
               {/* Wishlist */}
-              <button
-                onClick={() => onNavigate('wishlist')}
+              <a data-store-link href={routePath('wishlist')}
+
                 className="relative p-2 text-gray-700 hover:text-[#073faf] transition-colors cursor-pointer"
                 title="Wishlist"
                 aria-label="Wishlist"
@@ -344,11 +343,11 @@ export const Header: React.FC<HeaderProps> = ({
                     {wishlistCount}
                   </span>
                 )}
-              </button>
+              </a>
 
               {/* Cart */}
-              <button
-                onClick={() => onNavigate('cart')}
+              <a data-store-link href={routePath('cart')}
+
                 className="relative flex items-center gap-2 p-2 px-3 rounded-full hover:bg-gray-50 border border-transparent hover:border-gray-200 text-gray-800 transition-colors cursor-pointer"
                 title="Shopping Cart"
                 aria-label="Shopping Cart"
@@ -367,17 +366,17 @@ export const Header: React.FC<HeaderProps> = ({
                     PKR {cartTotal.toLocaleString()}
                   </div>
                 </div>
-              </button>
+              </a>
 
               {/* Account */}
-              <button
-                onClick={() => onNavigate('account')}
+              <a data-store-link href={routePath('account')}
+
                 className="p-2 text-gray-700 hover:text-[#073faf] transition-colors cursor-pointer"
                 title="My Account"
                 aria-label="My Account"
               >
                 <User className="w-5 h-5" />
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -403,54 +402,53 @@ export const Header: React.FC<HeaderProps> = ({
             </form>
 
             <div className="flex flex-col space-y-1">
-              <button
-                onClick={() => { onNavigate('home'); setIsMobileMenuOpen(false); }}
+              <a data-store-link href={routePath('home')}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="text-left py-2 font-semibold text-gray-800 hover:text-[#073faf]"
               >
                 Home
-              </button>
-              <button
-                onClick={() => { onNavigate('shop'); setIsMobileMenuOpen(false); }}
+              </a>
+              <a data-store-link href={routePath('shop')}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="text-left py-2 font-semibold text-gray-800 hover:text-[#073faf]"
               >
                 Shop Catalog
-              </button>
-              <button
-                onClick={() => { onNavigate('about'); setIsMobileMenuOpen(false); }}
+              </a>
+              <a data-store-link href={routePath('about')}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="text-left py-2 font-semibold text-gray-800 hover:text-[#073faf]"
               >
                 About Us
-              </button>
-              <button
-                onClick={() => { onNavigate('blog'); setIsMobileMenuOpen(false); }}
+              </a>
+              <a data-store-link href={routePath('blog')}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="text-left py-2 font-semibold text-gray-800 hover:text-[#073faf]"
               >
                 Blog & Guides
-              </button>
-              <button
-                onClick={() => { onNavigate('contact'); setIsMobileMenuOpen(false); }}
+              </a>
+              <a data-store-link href={routePath('contact')}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="text-left py-2 font-semibold text-gray-800 hover:text-[#073faf]"
               >
                 Contact Us
-              </button>
-              <button
-                onClick={() => { onNavigate('account'); setIsMobileMenuOpen(false); }}
+              </a>
+              <a data-store-link href={routePath('account')}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="text-left py-2 font-semibold text-gray-800 hover:text-[#073faf]"
               >
                 My Account
-              </button>
+              </a>
             </div>
 
             <div className="pt-3 border-t border-gray-100">
               <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Departments</div>
               <div className="grid grid-cols-2 gap-2">
-                {departmentsData.map((dept) => (
+                {activeDepartments.map((dept) => (
                   <button
                     key={dept.id}
                     onClick={() => {
                       onSelectCategory(dept.name);
                       setIsMobileMenuOpen(false);
-                      onNavigate('shop');
                     }}
                     className="text-left text-xs text-gray-700 py-1 hover:text-[#073faf] truncate"
                   >

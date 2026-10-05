@@ -1,4 +1,3 @@
-import { jsPDF } from 'jspdf';
 import { Order } from '../types';
 
 /**
@@ -6,6 +5,7 @@ import { Order } from '../types';
  * and triggers client-side file download.
  */
 export const generateInvoicePDF = async (order: Order): Promise<void> => {
+  const { jsPDF } = await import('jspdf');
   // Simulate realistic invoice rendering & document encryption delay
   await new Promise((resolve) => setTimeout(resolve, 650));
 
@@ -40,15 +40,15 @@ export const generateInvoicePDF = async (order: Order): Promise<void> => {
   // Vector Brand Mark
   const iconX = margin;
   const iconY = currentY;
-  
+
   // Icon Top Square
   doc.setFillColor(...brandCobalt);
   doc.rect(iconX, iconY, 5, 5, 'F');
-  
+
   // Icon L-Stem
   doc.rect(iconX, iconY + 7, 5, 11, 'F');
   doc.rect(iconX + 5, iconY + 13, 8, 5, 'F');
-  
+
   // Icon Inner Square
   doc.setFillColor(...textDark);
   doc.rect(iconX + 7, iconY + 7, 6, 4.5, 'F');
@@ -86,12 +86,12 @@ export const generateInvoicePDF = async (order: Order): Promise<void> => {
   doc.text(`Invoice Issued: ${new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}`, metaRightX, iconY + 18, { align: 'right' });
 
   // Status Badge on PDF
-  const statusColor = order.status === 'Delivered' 
-    ? emeraldGreen 
-    : order.status === 'Cancelled' 
-    ? roseRed 
-    : order.status === 'Processing' 
-    ? amberOrange 
+  const statusColor = order.status === 'Delivered'
+    ? emeraldGreen
+    : order.status === 'Cancelled'
+    ? roseRed
+    : order.status === 'Processing'
+    ? amberOrange
     : brandCobalt;
 
   doc.setFillColor(...statusColor);
@@ -157,10 +157,10 @@ export const generateInvoicePDF = async (order: Order): Promise<void> => {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(...textDark);
-  const paymentMethodLabel = order.paymentMethod === 'cod' 
-    ? 'Cash on Delivery (COD)' 
-    : order.paymentMethod === 'bank' 
-    ? 'Direct Bank Transfer / IBFT' 
+  const paymentMethodLabel = order.paymentMethod === 'cod'
+    ? 'Cash on Delivery (COD)'
+    : order.paymentMethod === 'bank'
+    ? 'Direct Bank Transfer / IBFT'
     : 'Debit / Credit Card';
   doc.text(`Method: ${paymentMethodLabel}`, margin + colWidth * 2 + 4, currentY + 10.5);
   doc.text(`Payment Status: ${order.status === 'Cancelled' ? 'Void / Cancelled' : 'Verified'}`, margin + colWidth * 2 + 4, currentY + 15);
@@ -207,8 +207,8 @@ export const generateInvoicePDF = async (order: Order): Promise<void> => {
     // Title
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(...textDark);
-    const titleSnippet = item.product.title.length > 55 
-      ? item.product.title.substring(0, 52) + '...' 
+    const titleSnippet = item.product.title.length > 55
+      ? item.product.title.substring(0, 52) + '...'
       : item.product.title;
     doc.text(titleSnippet, margin + 12, currentY + 5);
 

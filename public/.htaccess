@@ -1,0 +1,20 @@
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# One canonical URL for every generated page, including the homepage.
+RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+# Do not rewrite unknown URLs to the homepage: return a real 404.
+</IfModule>
+
+<IfModule mod_headers.c>
+<FilesMatch "\.html$">
+Header set Cache-Control "no-cache"
+</FilesMatch>
+<FilesMatch "\.(webp|svg|png|jpg|jpeg)$">
+Header set Cache-Control "public, max-age=604800"
+</FilesMatch>
+</IfModule>
