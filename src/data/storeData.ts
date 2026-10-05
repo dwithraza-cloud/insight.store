@@ -2,7 +2,7 @@ import { Department, HeroSlide, BlogPost } from '../types';
 import { productsData } from './products';
 
 const DEPARTMENT_META: Array<Omit<Department, 'count' | 'image'> & { image?: string }> = [
-  { id: 'digital-products', name: 'Digital Products', icon: 'Layers', image: '/images/products/digital-canva.webp', description: 'Subscriptions, creative tools, streaming and AI access' },
+  { id: 'digital-products', name: 'Digital Products', icon: 'Layers', description: 'Subscriptions, creative tools, streaming and AI access' },
   { id: 'bedsheets', name: 'Bedsheets', icon: 'Bed', description: 'Pure cotton single and king-size collections' },
   { id: 'clothes', name: 'Ladies & Gents Clothes', icon: 'Shirt', image: '/images/category-fashion.webp', description: 'Lawn collections and premium embroidered suits' },
   { id: 'bags-accessories', name: 'Bags & Accessories', icon: 'ShoppingBag', description: 'Everyday bags, pouches and useful accessories' },

@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { departmentsData } from '../data/storeData';
+import { ProductImage } from './ProductImage';
 
 interface DepartmentGridProps {
   onSelectDepartment: (deptName: string) => void;
@@ -156,10 +157,10 @@ export const DepartmentGrid: React.FC<DepartmentGridProps> = ({
                   </div>
 
                   {/* Category Image */}
-                  <img
+                  <ProductImage
                     src={dept.image}
                     alt={dept.name}
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm"
+                    className="max-w-full w-auto h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-sm"
                     loading="lazy"
                   />
                 </div>
