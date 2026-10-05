@@ -6,3 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Derived from versioned product sprite sheets before dev/build
+public/images/products/product-*.webp

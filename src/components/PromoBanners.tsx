@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { promoBannersData } from '../data/storeData';
@@ -41,7 +42,7 @@ export const PromoBanners: React.FC<PromoBannersProps> = ({ onSelectCategory }) 
               >
                 {/* Decorative Background Product Image */}
                 <div className="absolute -right-8 -bottom-6 w-44 h-44 rounded-full overflow-hidden opacity-20 group-hover:opacity-30 group-hover:scale-110 transition-all duration-500 pointer-events-none">
-                  <img
+                  <ProductImage
                     src={promo.image}
                     alt={promo.title}
                     className="w-full h-full object-cover"

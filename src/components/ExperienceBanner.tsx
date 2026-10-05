@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import React from 'react';
 import { ShieldCheck, Truck, Headphones, CheckCircle2, ArrowRight } from 'lucide-react';
 
@@ -62,7 +63,7 @@ export const ExperienceBanner: React.FC<ExperienceBannerProps> = ({ onShopNow })
           {/* Right Column Showcase Visual */}
           <div className="lg:col-span-5 relative">
             <div className="relative mx-auto max-w-md rounded-3xl overflow-hidden shadow-2xl border border-white/20 bg-white/5 backdrop-blur-sm p-4">
-              <img
+              <ProductImage
                 src="https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=800&q=85"
                 alt="4K Smart Display"
                 className="w-full h-auto rounded-2xl object-cover"

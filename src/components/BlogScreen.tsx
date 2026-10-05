@@ -1,3 +1,4 @@
+import { ProductImage } from './ProductImage';
 import { articlePath } from '../seo/catalog';
 import React, { useState } from 'react';
 import { Clock, Calendar, User, ArrowRight, X } from 'lucide-react';
@@ -72,7 +73,7 @@ export const BlogScreen: React.FC<BlogScreenProps> = ({ onNavigateHome }) => {
                 onClick={() => setActiveArticle(post)}
                 className="w-full aspect-[16/10] overflow-hidden cursor-pointer bg-gray-100 relative"
               >
-                <img
+                <ProductImage
                   src={post.image}
                   alt={post.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -155,7 +156,7 @@ export const BlogScreen: React.FC<BlogScreenProps> = ({ onNavigateHome }) => {
             </div>
 
             <div className="w-full aspect-[16/9] rounded-2xl overflow-hidden mb-6">
-              <img
+              <ProductImage
                 src={activeArticle.image}
                 alt={activeArticle.title}
                 className="w-full h-full object-cover"
