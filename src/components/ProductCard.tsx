@@ -27,7 +27,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   layout = 'grid'
 }) => {
   const [isAdded, setIsAdded] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -54,17 +53,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     return 'bg-[#16a34a] text-white';
   };
 
-  // Fallback image generator
-  const getFallbackImage = () => {
-    if (product.category === 'Digital Products') {
-      return 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=700&q=85';
-    }
-    if (product.category.toLowerCase().includes('bed')) {
-      return 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=700&q=85';
-    }
-    return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=85';
-  };
-
   if (layout === 'list') {
     return (
       <motion.article
@@ -86,9 +74,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           )}
 
           <ProductImage
-            src={imageError ? getFallbackImage() : product.image}
+            src={product.image}
             alt={product.title}
-            onError={() => setImageError(true)}
             className="w-full h-full object-contain p-2 rounded-xl group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
@@ -256,9 +243,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Product Image */}
         <ProductImage
-          src={imageError ? getFallbackImage() : product.image}
+          src={product.image}
           alt={product.title}
-          onError={() => setImageError(true)}
           className="w-full h-full object-contain p-2 sm:p-3 rounded-xl group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
