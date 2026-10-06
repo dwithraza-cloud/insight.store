@@ -1,3 +1,4 @@
+import { mixProductsByCategory } from '../utils/productOrder';
 import { categoryDescription, categoryPath, activeDepartments } from '../seo/catalog';
 import React, { useState, useMemo, useEffect } from 'react';
 import {
@@ -19,6 +20,7 @@ import { ProductCard } from './ProductCard';
 
 interface ShopScreenProps {
   products: Product[];
+  shuffleSeed?: number;
   selectedCategory: string;
   onSelectCategory: (category: string) => void;
   onAddToCart: (product: Product) => void;
@@ -58,6 +60,7 @@ const SHOP_CATEGORIES = [
 
 export const ShopScreen: React.FC<ShopScreenProps> = ({
   products,
+  shuffleSeed = 0,
   selectedCategory,
   onSelectCategory,
   onAddToCart,
@@ -158,8 +161,11 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
       return true;
     });
 
-    // Sorting
-    if (sortBy === 'low') {
+    // Only the All Products default view mixes categories. Explicit sorting
+    // and individual category pages retain their existing behavior.
+    if (sortBy === 'popular' && (!selectedCategory || selectedCategory.toLowerCase() === 'all')) {
+      result = mixProductsByCategory(result, shuffleSeed);
+    } else if (sortBy === 'low') {
       result = [...result].sort((a, b) => a.price - b.price);
     } else if (sortBy === 'high') {
       result = [...result].sort((a, b) => b.price - a.price);
@@ -170,7 +176,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
     }
 
     return result;
-  }, [products, selectedCategory, searchFilter, maxPrice, selectedBrand, inStockOnly, onSaleOnly, sortBy]);
+  }, [products, selectedCategory, searchFilter, maxPrice, selectedBrand, inStockOnly, onSaleOnly, sortBy, shuffleSeed]);
 
   // Reset page to 1 when filters change
   useEffect(() => {

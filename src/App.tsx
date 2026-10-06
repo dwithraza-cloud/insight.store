@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { productsData } from './data/products';
 import { blogPostsData, testimonialsData } from './data/storeData';
 import { Product, PageRoute, CartItem, Order } from './types';
@@ -28,9 +28,14 @@ import { updateMetadata } from './seo/metadata';
 import { ProductScreen } from './components/ProductScreen';
 import { ArticleScreen } from './components/ArticleScreen';
 import { ShoppingHelp } from './components/ShoppingHelp';
+import { mixProductsByCategory } from './utils/productOrder';
 
 export default function App({ initialPath }: { initialPath?: string } = {}) {
   const [location, setLocation] = useState(() => resolveLocation(initialPath ?? (typeof window === 'undefined' ? '/' : window.location.pathname)));
+  // Match prerendered HTML first, then choose one fresh order per page load.
+  const [shuffleSeed, setShuffleSeed] = useState(0);
+  useEffect(() => { setShuffleSeed(Math.floor(Math.random() * 4294967296)); }, []);
+  const mixedProducts = useMemo(() => mixProductsByCategory(productsData, shuffleSeed), [shuffleSeed]);
   const currentRoute = location.route;
   const selectedCategory = location.category;
   const navigate = (path: string) => {
@@ -301,7 +306,7 @@ export default function App({ initialPath }: { initialPath?: string } = {}) {
   // Home page featured filter
   const featuredTabs = ['All', 'Bedsheets', 'Electronics', 'Kitchen Accessories', 'Gadgets', 'Clothes', 'Toys'];
   const featuredProducts = homeFeaturedTab === 'All'
-    ? productsData.slice(0, 10)
+    ? mixedProducts.slice(0, 10)
     : productsData.filter((p) => {
         const cat = p.category.toLowerCase();
         const tab = homeFeaturedTab.toLowerCase();
@@ -561,6 +566,7 @@ export default function App({ initialPath }: { initialPath?: string } = {}) {
 
         {currentRoute === 'shop' && (
           <ShopScreen
+            shuffleSeed={shuffleSeed}
             products={productsData}
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
