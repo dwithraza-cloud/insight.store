@@ -24,6 +24,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
   const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'bank' | 'card'>('cod');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const shipping = subtotal >= 100000 || subtotal === 0 ? 0 : 500;
@@ -38,15 +39,29 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName || !phone || !address) {
-      alert('Please fill in your name, phone number, and delivery address.');
+    setFormError(null);
+    if (cartItems.length === 0) {
+      setFormError('Your cart is empty. Add at least one product before checkout.');
+      return;
+    }
+    if (!fullName.trim() || !phone.trim() || !address.trim()) {
+      setFormError('Please fill in your name, phone number, and delivery address.');
+      return;
+    }
+    const normalizedPhone = phone.replace(/[^0-9+]/g, '');
+    if (!/^(?:\+92|0)3\d{9}$/.test(normalizedPhone)) {
+      setFormError('Please enter a valid Pakistan mobile number.');
+      return;
+    }
+    if (paymentMethod === 'card') {
+      setFormError('Card payments are not enabled yet. Please choose Cash on Delivery or Bank Transfer.');
       return;
     }
 
     setIsSubmitting(true);
     setTimeout(() => {
       const newOrder: Order = {
-        id: `#IS-${Math.floor(10000 + Math.random() * 90000)}`,
+        id: `#IS-${Date.now().toString().slice(-8)}`,
         date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
         status: 'Processing',
         items: [...cartItems],
@@ -57,7 +72,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
         customer: {
           fullName,
           phone,
-          email: email || 'customer@insightstore.pk',
+          email: email.trim(),
           address,
           city,
           notes
@@ -84,6 +99,11 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
         Secure Checkout
       </h1>
 
+      {formError && (
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" role="alert">
+          {formError}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Form: Delivery Information */}
         <div className="lg:col-span-7 space-y-6">
@@ -240,31 +260,20 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
                 </div>
               </label>
 
-              {/* Option 3: Card */}
-              <label
-                className={`flex items-start gap-4 p-4 rounded-xl border-2 transition-all cursor-pointer ${
-                  paymentMethod === 'card'
-                    ? 'border-[#073faf] bg-blue-50/50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="payment"
-                  checked={paymentMethod === 'card'}
-                  onChange={() => setPaymentMethod('card')}
-                  className="accent-[#073faf] mt-1"
-                />
+              {/* Option 3: Card - intentionally disabled until a real payment gateway is connected */}
+              <div className="flex items-start gap-4 p-4 rounded-xl border-2 border-gray-200 bg-gray-50 opacity-75">
+                <input type="radio" name="payment" disabled className="mt-1" />
                 <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-sm text-gray-900">Visa / Mastercard / UnionPay</span>
-                    <CreditCard className="w-4 h-4 text-gray-400" />
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="font-bold text-sm text-gray-700">Visa / Mastercard / UnionPay</span>
+                    <span className="text-[10px] font-extrabold text-gray-500 bg-gray-200 px-2 py-0.5 rounded">COMING SOON</span>
                   </div>
                   <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                    Fast and encrypted online card checkout. 3D Secure verified OTP authentication.
+                    Card checkout will appear here after a production payment gateway is connected.
                   </p>
                 </div>
-              </label>
+                <CreditCard className="w-4 h-4 text-gray-400 shrink-0" />
+              </div>
             </div>
           </div>
         </div>
@@ -324,7 +333,7 @@ export const CheckoutScreen: React.FC<CheckoutScreenProps> = ({
           {/* Place Order CTA */}
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || cartItems.length === 0}
             className="w-full py-4 rounded-xl bg-gradient-to-r from-[#073faf] to-[#082f87] hover:from-[#082f87] hover:to-[#051f5c] text-white font-extrabold text-base shadow-xl shadow-blue-600/25 transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
