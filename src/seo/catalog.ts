@@ -8,7 +8,7 @@ export const productPath = (p: Product) => `/products/${slugify(p.title)}-${p.id
 export const articlePath = (p: BlogPost) => `/blog/${slugify(p.title)}/`;
 export const activeDepartments = departmentsData.filter(d => d.count > 0);
 export const categoryPath = (name: string) => name.toLowerCase() === 'all' ? '/shop/' : `/categories/${slugify(name)}/`;
-export const routePath = (route: PageRoute) => route === 'home' ? '/' : route === 'not-found' ? '/404/' : `/${route}/`;
+export const routePath = (route: PageRoute) => route === 'home' ? '/' : route === 'not-found' ? '/404/' : route === 'login' ? '/account/login/' : route === 'signup' ? '/account/signup/' : route === 'reset-password' ? '/account/reset-password/' : `/${route}/`;
 export const productAsset = (src: string) => src.replace(/^\/images\/product-sprites\/(product-\d+)\.svg$/, '/images/products/$1.webp');
 export interface LocationState { path: string; route: PageRoute; category: string; product?: Product; article?: BlogPost }
 export function resolveLocation(input: string): LocationState {
@@ -22,7 +22,7 @@ export function resolveLocation(input: string): LocationState {
   if (department) return { ...base, route: 'shop', category: department.name };
   const article = blogPostsData.find(p => articlePath(p) === path);
   if (article) return { ...base, route: 'article', article };
-  const routes: PageRoute[] = ['shop', 'about', 'blog', 'contact', 'help', 'cart', 'checkout', 'wishlist', 'compare', 'account'];
+  const routes: PageRoute[] = ['shop', 'about', 'blog', 'contact', 'help', 'cart', 'checkout', 'wishlist', 'compare', 'account', 'login', 'signup', 'reset-password'];
   const route = routes.find(r => routePath(r) === path);
   return { ...base, route: route || 'not-found' };
 }
@@ -36,4 +36,4 @@ export const categoryIntro: Record<string, string> = {
 export function categoryDescription(name: string) {
   return categoryIntro[name] || `Browse ${name.toLowerCase()} at Insight Store in Pakistan. Compare current PKR prices, availability and product details before ordering.`;
 }
-export const publicPaths = ['/', '/shop/', '/about/', '/contact/', '/blog/', '/help/', ...activeDepartments.map(d => categoryPath(d.name)), ...productsData.map(productPath), ...blogPostsData.map(articlePath)];
+export const publicPaths = ['/', '/shop/', '/about/', '/contact/', '/blog/', '/help/', '/account/login/', '/account/signup/', '/account/reset-password/', ...activeDepartments.map(d => categoryPath(d.name)), ...productsData.map(productPath), ...blogPostsData.map(articlePath)];
