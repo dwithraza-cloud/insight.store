@@ -1,6 +1,6 @@
 import { Product } from '../types';
 
-export const productsData: Product[
+export const productsData: Product[] = [
   {
       "id": 221,
       "title": "Prime Video — 1 Month",
