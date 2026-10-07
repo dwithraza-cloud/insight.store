@@ -10,6 +10,7 @@ import {
   signUpWithEmail,
   startGoogleSignIn,
   verifyPhoneOtp,
+  updatePassword,
 } from '../services/authService';
 
 type Mode = 'login' | 'signup' | 'reset';
@@ -42,6 +43,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
   const [phoneStage, setPhoneStage] = useState<'idle' | 'otp'>('idle');
   const [otp, setOtp] = useState('');
   const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('email');
+  const recoveryParams = typeof window === 'undefined' ? new URLSearchParams() : new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  const recoveryToken = recoveryParams.get('type') === 'recovery' ? recoveryParams.get('access_token') : null;
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
   const heading = useMemo(() => {
     if (mode === 'signup') return 'Create your account';
@@ -65,6 +70,14 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
     try {
       setLoading(true);
       if (mode === 'reset') {
+        if (recoveryToken) {
+          if (newPassword.length < 8) throw new Error('New password must be at least 8 characters.');
+          if (newPassword !== confirmNewPassword) throw new Error('Passwords do not match.');
+          await updatePassword(recoveryToken, newPassword);
+          window.history.replaceState({}, '', '/account/login/');
+          setStatus({ type: 'success', text: 'Password updated successfully. You can now sign in.' });
+          return;
+        }
         if (!emailOrPhone.includes('@')) throw new Error('Enter a valid email address.');
         await sendPasswordReset(emailOrPhone.trim());
         setStatus({ type: 'success', text: 'Password reset instructions have been sent to your email.' });
@@ -192,13 +205,32 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                     </label>
                   )}
 
-                  <label className="block">
-                    <span className="text-xs font-bold text-slate-700">{mode === 'reset' ? 'Email address' : 'Email'}</span>
-                    <div className="mt-1.5 flex items-center gap-2 rounded-xl border border-slate-200 px-3 bg-white focus-within:border-[#073faf]">
-                      <Mail className="w-4 h-4 text-slate-400" />
-                      <input value={emailOrPhone} onChange={(e) => setEmailOrPhone(e.target.value)} className="w-full py-3 outline-none text-sm" placeholder="you@example.com" autoComplete="email" />
-                    </div>
-                  </label>
+                  {mode === 'reset' && recoveryToken ? (
+                    <>
+                      <label className="block">
+                        <span className="text-xs font-bold text-slate-700">New password</span>
+                        <div className="mt-1.5 flex items-center gap-2 rounded-xl border border-slate-200 px-3 bg-white focus-within:border-[#073faf]">
+                          <LockKeyhole className="w-4 h-4 text-slate-400" />
+                          <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="w-full py-3 outline-none text-sm" placeholder="Minimum 8 characters" autoComplete="new-password" />
+                        </div>
+                      </label>
+                      <label className="block">
+                        <span className="text-xs font-bold text-slate-700">Confirm new password</span>
+                        <div className="mt-1.5 flex items-center gap-2 rounded-xl border border-slate-200 px-3 bg-white focus-within:border-[#073faf]">
+                          <KeyRound className="w-4 h-4 text-slate-400" />
+                          <input type="password" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} className="w-full py-3 outline-none text-sm" placeholder="Repeat new password" autoComplete="new-password" />
+                        </div>
+                      </label>
+                    </>
+                  ) : (
+                    <label className="block">
+                      <span className="text-xs font-bold text-slate-700">{mode === 'reset' ? 'Email address' : 'Email'}</span>
+                      <div className="mt-1.5 flex items-center gap-2 rounded-xl border border-slate-200 px-3 bg-white focus-within:border-[#073faf]">
+                        <Mail className="w-4 h-4 text-slate-400" />
+                        <input value={emailOrPhone} onChange={(e) => setEmailOrPhone(e.target.value)} className="w-full py-3 outline-none text-sm" placeholder="you@example.com" autoComplete="email" />
+                      </div>
+                    </label>
+                  )}
 
                   {mode === 'signup' && (
                     <label className="block">
@@ -248,7 +280,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                   )}
 
                   <button disabled={loading} className="w-full rounded-xl bg-[#073faf] hover:bg-[#052f8e] disabled:opacity-60 text-white py-3.5 text-sm font-black shadow-lg shadow-blue-900/15">
-                    {loading ? 'Please wait...' : mode === 'signup' ? 'Create account' : mode === 'reset' ? 'Send reset link' : 'Sign in'}
+                    {loading ? 'Please wait...' : mode === 'signup' ? 'Create account' : mode === 'reset' ? (recoveryToken ? 'Update password' : 'Send reset link') : 'Sign in'}
                   </button>
 
                   {mode !== 'reset' && (
