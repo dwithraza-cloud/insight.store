@@ -435,7 +435,7 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 Contact Us
               </a>
-              <a data-store-link href={routePath('account')}
+              <a data-store-link href={routePath(isAuthenticated ? 'account' : 'login')}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-left py-2 font-semibold text-gray-800 hover:text-[#073faf]"
               >
