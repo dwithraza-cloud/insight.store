@@ -13,8 +13,9 @@ export interface AuthSession {
   user: AuthUser;
 }
 
-const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL || '').replace(/\/$/, '');
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const env = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env ?? {};
+const SUPABASE_URL = (env.VITE_SUPABASE_URL ?? '').replace(/\/$/, '');
+const SUPABASE_ANON_KEY = env.VITE_SUPABASE_ANON_KEY ?? '';
 const SESSION_KEY = 'insight.auth.session.v1';
 
 export const authConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
