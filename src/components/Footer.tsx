@@ -167,7 +167,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onSelectDepartment }
             <span className="text-[11px] font-semibold text-blue-200/60">Accepted Payments:</span>
             <span className="px-2 py-1 rounded bg-white/10 text-white font-bold text-[10px]">COD</span>
             <span className="px-2 py-1 rounded bg-white/10 text-white font-bold text-[10px]">Bank Transfer</span>
-            <span className="px-2 py-1 rounded bg-white/10 text-white font-bold text-[10px]">Visa / MC</span>
+            <span className="px-2 py-1 rounded bg-white/10 text-blue-200/70 font-bold text-[10px]">Card — coming soon</span>
             <span className="px-2 py-1 rounded bg-white/10 text-white font-bold text-[10px]">Easypaisa</span>
           </div>
         </div>
