@@ -133,6 +133,15 @@ export default function App({ initialPath }: { initialPath?: string } = {}) {
     writeShoppingState(shoppingScope, { cart, wishlist, compare, orders });
   }, [authReady, shoppingReady, shoppingScope, cart, wishlist, compare, orders]);
 
+  useEffect(() => {
+    if (!authReady) return;
+    if (currentRoute === 'account' && !session?.user?.id) {
+      navigate('/account/login/');
+    } else if ((currentRoute === 'login' || currentRoute === 'signup') && session?.user?.id) {
+      navigate('/account/');
+    }
+  }, [authReady, currentRoute, session?.user?.id]);
+
   const handleAuthenticated = (nextSession: AuthSession) => {
     const guest = readShoppingState('guest');
     const userScope = `user.${nextSession.user.id}`;
