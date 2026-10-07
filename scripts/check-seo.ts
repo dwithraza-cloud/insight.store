@@ -32,7 +32,7 @@ for (const product of productsData) {
 }
 const sitemap = readFileSync('dist/sitemap.xml', 'utf8');
 assert.equal((sitemap.match(/<loc>/g) || []).length, publicPaths.length);
-for (const path of ['/cart/', '/checkout/', '/account/', '/compare/', '/wishlist/']) {
+for (const path of ['/cart/', '/checkout/', '/account/', '/account/login/', '/account/signup/', '/account/reset-password/', '/compare/', '/wishlist/']) {
   assert(!sitemap.includes(`<loc>${SITE_URL}${path}</loc>`));
   assert(readFileSync(join('dist', path, 'index.html'), 'utf8').includes('noindex,follow'));
 }
