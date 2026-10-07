@@ -16,12 +16,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onSelectDepartment }
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newsletterEmail.trim()) return;
+    const email = newsletterEmail.trim();
+    if (!email) return;
+    window.location.href = `mailto:hello@insightstore.pk?subject=${encodeURIComponent('Newsletter subscription request')}&body=${encodeURIComponent(`Please add ${email} to the Insight Store newsletter list.`)}`;
     setIsSubscribed(true);
-    setTimeout(() => {
-      setNewsletterEmail('');
-      setIsSubscribed(false);
-    }, 4000);
   };
 
   return (
@@ -131,7 +129,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onSelectDepartment }
             {isSubscribed ? (
               <div className="p-3 bg-emerald-500/20 border border-emerald-400/40 rounded-xl text-xs text-emerald-300 font-bold flex items-center gap-2">
                 <Check className="w-4 h-4" />
-                <span>Thank you for subscribing!</span>
+                <span>Email app opened — send the request to subscribe.</span>
               </div>
             ) : (
               <form onSubmit={handleSubscribe} className="space-y-2">
