@@ -34,15 +34,16 @@ export const ContactScreen: React.FC<ContactScreenProps> = ({ onNavigateHome }) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !message) return;
+    if (!name.trim() || !message.trim()) return;
+    const body = [
+      `Name: ${name.trim()}`,
+      email.trim() ? `Email: ${email.trim()}` : '',
+      '',
+      message.trim(),
+    ].filter(Boolean).join('\n');
+    const mailto = `mailto:hello@insightstore.pk?subject=${encodeURIComponent(subject.trim() || 'Insight Store website enquiry')}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailto;
     setIsSent(true);
-    setTimeout(() => {
-      setName('');
-      setEmail('');
-      setSubject('');
-      setMessage('');
-      setIsSent(false);
-    }, 4000);
   };
 
   return (
@@ -123,9 +124,9 @@ export const ContactScreen: React.FC<ContactScreenProps> = ({ onNavigateHome }) 
           {isSent ? (
             <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-200 text-center space-y-3">
               <CheckCircle className="w-10 h-10 text-emerald-600 mx-auto" />
-              <h4 className="font-black text-emerald-800 text-base">Message Sent Successfully!</h4>
+              <h4 className="font-black text-emerald-800 text-base">Your email app is ready</h4>
               <p className="text-xs text-emerald-700 max-w-sm mx-auto">
-                Thank you, {name || 'valued customer'}. Our team will review your inquiry and contact you shortly.
+                Your message has been prepared in your email app. Send it from there to contact our team.
               </p>
             </div>
           ) : (
