@@ -34,10 +34,10 @@ interface OrderTrackerProps {
 
 export const OrderTracker: React.FC<OrderTrackerProps> = ({
   orders,
-  initialOrderId = '#IS-94021',
+  initialOrderId = '',
   onReorder
 }) => {
-  const [orderIdInput, setOrderIdInput] = useState<string>(initialOrderId);
+  const [orderIdInput, setOrderIdInput] = useState<string>(initialOrderId || orders[0]?.id || '');
   const [activeTracking, setActiveTracking] = useState<TrackingDetails | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -46,11 +46,9 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
   const [isDownloadingInvoice, setIsDownloadingInvoice] = useState<boolean>(false);
   const [invoiceDownloaded, setInvoiceDownloaded] = useState<boolean>(false);
 
-  // Load initial order tracking on mount
+  // Load an explicitly selected account order on mount.
   useEffect(() => {
-    if (initialOrderId) {
-      handleTrack(initialOrderId);
-    }
+    if (initialOrderId) handleTrack(initialOrderId);
   }, [initialOrderId]);
 
   const handleTrack = async (targetId: string) => {
@@ -94,25 +92,8 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
       const existing = orders.find(
         (o) => normalizeOrderId(o.id) === normalizeOrderId(activeTracking.orderId)
       );
-      const orderToExport: Order = existing || {
-        id: activeTracking.orderId,
-        date: activeTracking.checkpoints[0]?.timestamp || 'Date unavailable',
-        status: (activeTracking.status as any) || 'Processing',
-        items: [],
-        total: activeTracking.totalAmount,
-        subtotal: activeTracking.totalAmount,
-        shipping: 0,
-        discount: 0,
-        customer: {
-          fullName: 'Valued Customer',
-          email: 'customer@insightstore.pk',
-          phone: '03145338340',
-          address: 'House 18-B, Gulberg III',
-          city: activeTracking.recipientCity || 'Lahore'
-        },
-        paymentMethod: (activeTracking.paymentMethod?.toLowerCase().includes('card') ? 'card' : 'cod') as any
-      };
-      await generateInvoicePDF(orderToExport);
+      if (!existing) throw new Error('This invoice is not available in the signed-in account.');
+      await generateInvoicePDF(existing);
       setInvoiceDownloaded(true);
       setTimeout(() => setInvoiceDownloaded(false), 3000);
     } catch (err) {
@@ -122,12 +103,10 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
     }
   };
 
-  // Quick suggestions based on user orders or sample courier codes
-  const quickSuggestions = [
-    { label: '#IS-94021 (Delivered)', id: '#IS-94021' },
-    { label: '#IS-10428 (In Transit)', id: '#IS-10428' },
-    { label: '#IS-10387 (Out for Delivery)', id: '#IS-10387' }
-  ];
+  const quickSuggestions = orders.slice(0, 3).map((order) => ({
+    label: `${order.id} (${order.status})`,
+    id: order.id,
+  }));
 
   return (
     <div className="bg-white border border-[#e7eaf0] rounded-3xl p-6 sm:p-8 shadow-sm space-y-8" id="track-order-module">
@@ -136,13 +115,13 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-[#073faf] text-xs font-black uppercase tracking-wider mb-2">
             <Truck className="w-3.5 h-3.5" />
-            <span>Live Courier Telemetry</span>
+            <span>Order Tracking</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-[#101828]">
             Track Your Order
           </h2>
           <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
-            Real-time status integration with official courier logistics (TCS, Leopards, Trax).
+            Check the latest order status recorded in your Insight Store account.
           </p>
         </div>
 
@@ -171,7 +150,7 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
               type="text"
               value={orderIdInput}
               onChange={(e) => setOrderIdInput(e.target.value)}
-              placeholder="Enter Order ID (e.g. #IS-94021 or IS-10428)"
+              placeholder="Enter your Insight Store Order ID"
               className="w-full pl-11 pr-4 py-3 text-sm font-semibold rounded-2xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-[#073faf] focus:ring-2 focus:ring-blue-100 outline-none transition-all placeholder:text-gray-400 placeholder:font-normal uppercase"
             />
           </div>
@@ -198,7 +177,7 @@ export const OrderTracker: React.FC<OrderTrackerProps> = ({
         {/* Quick Suggestion Chips */}
         <div className="flex items-center gap-2 flex-wrap pt-1">
           <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-            Quick Examples:
+            Your recent orders:
           </span>
           {quickSuggestions.map((sug) => (
             <button
