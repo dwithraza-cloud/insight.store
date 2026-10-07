@@ -19,7 +19,9 @@ import { CompareScreen } from './components/CompareScreen';
 import { AboutScreen } from './components/AboutScreen';
 import { BlogScreen } from './components/BlogScreen';
 import { ContactScreen } from './components/ContactScreen';
-import { AccountScreen } from './components/AccountScreen';
+import { AuthScreen } from './components/AuthScreen';
+import { CustomerAccountScreen } from './components/CustomerAccountScreen';
+import { AuthSession, getStoredSession, hydrateOAuthSessionFromUrl, signOut } from './services/authService';
 import { Footer } from './components/Footer';
 import { Toast, ToastMessage } from './components/Toast';
 import { ArrowRight, Star } from 'lucide-react';
@@ -59,108 +61,110 @@ export default function App({ initialPath }: { initialPath?: string } = {}) {
     if (url.origin !== window.location.origin) return;
     e.preventDefault(); navigate(url.pathname);
   };
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    // Initial demo cart items so user experiences immediate functionality
-    const p1 = productsData.find((p) => p.id === 1) || productsData[0];
-    const p2 = productsData.find((p) => p.id === 4) || productsData[1];
-    return [
-      { product: p1, quantity: 1 },
-      { product: p2, quantity: 2 }
-    ];
-  });
-  const [wishlist, setWishlist] = useState<number[]>([2, 5, 8]);
-  const [compare, setCompare] = useState<number[]>([1, 4]);
+  const [session, setSession] = useState<AuthSession | null>(() => getStoredSession());
+  const [authReady, setAuthReady] = useState(false);
+  const [shoppingReady, setShoppingReady] = useState(false);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [wishlist, setWishlist] = useState<number[]>([]);
+  const [compare, setCompare] = useState<number[]>([]);
   const [discountRate, setDiscountRate] = useState<number>(0);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [homeFeaturedTab, setHomeFeaturedTab] = useState<string>('All');
+  const [orders, setOrders] = useState<Order[]>([]);
 
-  // Sample order history showcasing diverse dynamic order statuses
-  const [orders, setOrders] = useState<Order[]>([
-    {
-      id: '#IS-94021',
-      date: 'Aug 12, 2026',
-      status: 'Delivered',
-      items: [
-        { product: productsData[0], quantity: 1 },
-        { product: productsData[6], quantity: 1 }
-      ],
-      total: 98999,
-      subtotal: 98999,
-      shipping: 0,
-      discount: 0,
-      customer: {
-        fullName: 'Muhammad Hamza',
-        phone: '03145338340',
-        email: 'hamza@insightstore.pk',
-        address: 'House 18-B, Block C-2, Gulberg III',
-        city: 'Lahore'
-      },
-      paymentMethod: 'cod'
-    },
-    {
-      id: '#IS-10428',
-      date: 'Sep 16, 2026',
-      status: 'Processing',
-      items: [
-        { product: productsData[1], quantity: 1 },
-        { product: productsData[2], quantity: 2 }
-      ],
-      total: 58900,
-      subtotal: 58900,
-      shipping: 0,
-      discount: 0,
-      customer: {
-        fullName: 'Muhammad Hamza',
-        phone: '03145338340',
-        email: 'hamza@insightstore.pk',
-        address: 'House 18-B, Block C-2, Gulberg III',
-        city: 'Lahore'
-      },
-      paymentMethod: 'bank'
-    },
-    {
-      id: '#IS-10387',
-      date: 'Sep 15, 2026',
-      status: 'Shipped',
-      items: [
-        { product: productsData[3], quantity: 1 }
-      ],
-      total: 24999,
-      subtotal: 24999,
-      shipping: 0,
-      discount: 0,
-      customer: {
-        fullName: 'Muhammad Hamza',
-        phone: '03145338340',
-        email: 'hamza@insightstore.pk',
-        address: 'House 18-B, Block C-2, Gulberg III',
-        city: 'Lahore'
-      },
-      paymentMethod: 'cod'
-    },
-    {
-      id: '#IS-88219',
-      date: 'Aug 29, 2026',
-      status: 'Cancelled',
-      items: [
-        { product: productsData[4], quantity: 1 }
-      ],
-      total: 18499,
-      subtotal: 18499,
-      shipping: 0,
-      discount: 0,
-      customer: {
-        fullName: 'Muhammad Hamza',
-        phone: '03145338340',
-        email: 'hamza@insightstore.pk',
-        address: 'House 18-B, Block C-2, Gulberg III',
-        city: 'Lahore'
-      },
-      paymentMethod: 'card'
+  const shoppingKey = (scope: string) => `insight.shopping.v2.${scope}`;
+  const shoppingScope = session?.user?.id ? `user.${session.user.id}` : 'guest';
+
+  const readShoppingState = (scope: string) => {
+    if (typeof window === 'undefined') return { cart: [] as CartItem[], wishlist: [] as number[], compare: [] as number[], orders: [] as Order[] };
+    try {
+      const raw = localStorage.getItem(shoppingKey(scope));
+      if (!raw) return { cart: [] as CartItem[], wishlist: [] as number[], compare: [] as number[], orders: [] as Order[] };
+      const parsed = JSON.parse(raw);
+      const restoredCart: CartItem[] = Array.isArray(parsed.cart)
+        ? parsed.cart.map((item: any) => {
+            const product = productsData.find((p) => p.id === Number(item.productId));
+            return product ? { product, quantity: Math.max(1, Number(item.quantity) || 1) } : null;
+          }).filter(Boolean)
+        : [];
+      const validIds = new Set(productsData.map((p) => p.id));
+      const restoredWishlist = Array.isArray(parsed.wishlist) ? parsed.wishlist.map(Number).filter((id: number) => validIds.has(id)) : [];
+      const restoredCompare = Array.isArray(parsed.compare) ? parsed.compare.map(Number).filter((id: number) => validIds.has(id)).slice(0, 4) : [];
+      const restoredOrders = Array.isArray(parsed.orders) ? parsed.orders : [];
+      return { cart: restoredCart, wishlist: restoredWishlist, compare: restoredCompare, orders: restoredOrders };
+    } catch {
+      return { cart: [] as CartItem[], wishlist: [] as number[], compare: [] as number[], orders: [] as Order[] };
     }
-  ]);
+  };
+
+  const writeShoppingState = (scope: string, state: { cart: CartItem[]; wishlist: number[]; compare: number[]; orders: Order[] }) => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(shoppingKey(scope), JSON.stringify({
+      cart: state.cart.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
+      wishlist: state.wishlist,
+      compare: state.compare,
+      orders: state.orders,
+    }));
+  };
+
+  useEffect(() => {
+    let active = true;
+    hydrateOAuthSessionFromUrl()
+      .then((next) => { if (active && next) setSession(next); })
+      .finally(() => { if (active) setAuthReady(true); });
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    if (!authReady) return;
+    setShoppingReady(false);
+    const restored = readShoppingState(shoppingScope);
+    setCart(restored.cart);
+    setWishlist(restored.wishlist);
+    setCompare(restored.compare);
+    setOrders(restored.orders);
+    setShoppingReady(true);
+  }, [authReady, shoppingScope]);
+
+  useEffect(() => {
+    if (!authReady || !shoppingReady) return;
+    writeShoppingState(shoppingScope, { cart, wishlist, compare, orders });
+  }, [authReady, shoppingReady, shoppingScope, cart, wishlist, compare, orders]);
+
+  const handleAuthenticated = (nextSession: AuthSession) => {
+    const guest = readShoppingState('guest');
+    const userScope = `user.${nextSession.user.id}`;
+    const existing = readShoppingState(userScope);
+
+    const mergedCart = [...existing.cart];
+    guest.cart.forEach((guestItem) => {
+      const index = mergedCart.findIndex((item) => item.product.id === guestItem.product.id);
+      if (index >= 0) mergedCart[index] = { ...mergedCart[index], quantity: mergedCart[index].quantity + guestItem.quantity };
+      else mergedCart.push(guestItem);
+    });
+    const mergedWishlist = Array.from(new Set([...existing.wishlist, ...guest.wishlist]));
+    const mergedCompare = Array.from(new Set([...existing.compare, ...guest.compare])).slice(0, 4);
+    const mergedOrders = [...existing.orders, ...guest.orders.filter((go) => !existing.orders.some((eo) => eo.id === go.id))];
+
+    writeShoppingState(userScope, { cart: mergedCart, wishlist: mergedWishlist, compare: mergedCompare, orders: mergedOrders });
+    localStorage.removeItem(shoppingKey('guest'));
+    setSession(nextSession);
+    setCart(mergedCart);
+    setWishlist(mergedWishlist);
+    setCompare(mergedCompare);
+    setOrders(mergedOrders);
+    setShoppingReady(true);
+    navigate('/account/');
+  };
+
+  const handleLogout = async () => {
+    await signOut(session);
+    setSession(null);
+    setShoppingReady(false);
+    navigate('/account/login/');
+  };
 
   // Scroll to top on route change
   useEffect(() => {
@@ -332,6 +336,7 @@ export default function App({ initialPath }: { initialPath?: string } = {}) {
         cartTotal={cartTotal}
         wishlistCount={wishlist.length}
         compareCount={compare.length}
+        isAuthenticated={Boolean(session?.user?.id)}
       />
 
       {/* Main Content Body */}
@@ -643,13 +648,35 @@ export default function App({ initialPath }: { initialPath?: string } = {}) {
           <ContactScreen onNavigateHome={() => setCurrentRoute('home')} />
         )}
 
-        {currentRoute === 'account' && (
-          <AccountScreen
-            orders={orders}
-            onExploreShop={() => setCurrentRoute('shop')}
-            onNavigateHome={() => setCurrentRoute('home')}
-            onReorder={handleReorder}
+        {(currentRoute === 'login' || currentRoute === 'signup' || currentRoute === 'reset-password') && (
+          <AuthScreen
+            mode={currentRoute === 'signup' ? 'signup' : currentRoute === 'reset-password' ? 'reset' : 'login'}
+            onAuthenticated={handleAuthenticated}
+            onNavigateMode={(mode) => navigate(mode === 'signup' ? '/account/signup/' : mode === 'reset' ? '/account/reset-password/' : '/account/login/')}
+            onBackHome={() => setCurrentRoute('home')}
+            nextPath={new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search).get('next') || '/account/'}
           />
+        )}
+
+        {currentRoute === 'account' && (
+          session?.user?.id ? (
+            <CustomerAccountScreen
+              user={session.user}
+              orders={orders}
+              cartCount={cartCount}
+              wishlistCount={wishlist.length}
+              onLogout={handleLogout}
+              onExploreShop={() => setCurrentRoute('shop')}
+            />
+          ) : (
+            <AuthScreen
+              mode="login"
+              onAuthenticated={handleAuthenticated}
+              onNavigateMode={(mode) => navigate(mode === 'signup' ? '/account/signup/' : mode === 'reset' ? '/account/reset-password/' : '/account/login/')}
+              onBackHome={() => setCurrentRoute('home')}
+              nextPath="/account/"
+            />
+          )
         )}
       </main>
 
