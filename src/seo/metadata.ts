@@ -8,7 +8,7 @@ export function metadataFor(path: string) {
   let description = 'Shop bedsheets, ladies and gents clothing, digital subscriptions, kitchen essentials and gadgets at Insight Store. Compare product details and prices in PKR.';
   let image = absolute('/images/banner-fashion-jewellery.webp');
   let type = 'website';
-  const noindex = ['cart', 'checkout', 'account', 'wishlist', 'compare', 'not-found'].includes(l.route);
+  const noindex = ['cart', 'checkout', 'account', 'login', 'signup', 'reset-password', 'wishlist', 'compare', 'not-found'].includes(l.route);
   const graph: Record<string, unknown>[] = [{ '@type': 'Organization', '@id': `${SITE_URL}/#organization`, name: 'Insight Store', url: SITE_URL, logo: absolute('/images/insight-store-logo.svg') }, { '@type': 'WebSite', '@id': `${SITE_URL}/#website`, name: 'Insight Store', url: SITE_URL, publisher: { '@id': `${SITE_URL}/#organization` } }];
   let crumbs = [{ name: 'Home', item: absolute('/') }];
   if (l.product) {
