@@ -160,6 +160,7 @@ export function startGoogleSignIn(nextPath = '/account/') {
 export async function hydrateOAuthSessionFromUrl(): Promise<AuthSession | null> {
   if (typeof window === 'undefined') return null;
   const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  if (hash.get('type') === 'recovery') return getStoredSession();
   const accessToken = hash.get('access_token');
   if (!accessToken || !authConfigured) return getStoredSession();
 
