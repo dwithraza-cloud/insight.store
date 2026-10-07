@@ -107,15 +107,15 @@ export const CustomerAccountScreen: React.FC<CustomerAccountScreenProps> = ({
               <div className="space-y-6">
                 <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
                   {[
-                    ['Orders', orders.length, Package],
-                    ['Wishlist', wishlistCount, Heart],
-                    ['Cart', cartCount, ShoppingBag],
-                    ['Addresses', addresses.length, MapPin],
-                  ].map(([label, value, Icon]) => (
-                    <div key={String(label)} className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    { label: 'Orders', value: orders.length, Icon: Package },
+                    { label: 'Wishlist', value: wishlistCount, Icon: Heart },
+                    { label: 'Cart', value: cartCount, Icon: ShoppingBag },
+                    { label: 'Addresses', value: addresses.length, Icon: MapPin },
+                  ].map(({ label, value, Icon }) => (
+                    <div key={label} className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
                       <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#073faf] flex items-center justify-center mb-4"><Icon className="w-5 h-5" /></div>
-                      <div className="text-2xl font-black text-slate-900">{String(value)}</div>
-                      <div className="text-xs font-semibold text-slate-500 mt-1">{String(label)}</div>
+                      <div className="text-2xl font-black text-slate-900">{value}</div>
+                      <div className="text-xs font-semibold text-slate-500 mt-1">{label}</div>
                     </div>
                   ))}
                 </div>
