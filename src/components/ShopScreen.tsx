@@ -32,31 +32,7 @@ interface ShopScreenProps {
   onNavigateHome: () => void;
 }
 
-// Categories exactly matching the uploaded screenshot list
-const SHOP_CATEGORIES = [
-  'All',
-  'Digital Products',
-  'Bedsheets',
-  'Ladies & Gents Clothes',
-  'Bags & Accessories',
-  'Kitchen',
-  'Toys',
-  'Personal Care',
-  'Gadgets',
-  'Mobile',
-  'Computers',
-  'Audio',
-  'Wearables',
-  'Television',
-  'Gaming',
-  'Camera',
-  'Networking',
-  'Home Appliances',
-  'Kitchen Accessories',
-  'Electronics',
-  'Home Decor',
-  'Jewellery'
-];
+const SHOP_CATEGORIES = ['All', ...activeDepartments.map((department) => department.name)];
 
 export const ShopScreen: React.FC<ShopScreenProps> = ({
   products,
@@ -185,6 +161,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
 
   // Pagination calculations
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / itemsPerPage));
+  useEffect(() => { if (currentPage > totalPages) setCurrentPage(totalPages); }, [currentPage, totalPages]);
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
     return filteredProducts.slice(start, start + itemsPerPage);
