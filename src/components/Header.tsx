@@ -35,6 +35,7 @@ interface HeaderProps {
   cartTotal: number;
   wishlistCount: number;
   compareCount: number;
+  isAuthenticated?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -46,7 +47,8 @@ export const Header: React.FC<HeaderProps> = ({
   cartCount,
   cartTotal,
   wishlistCount,
-  compareCount
+  compareCount,
+  isAuthenticated = false
 }) => {
   const [searchCategory, setSearchCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -369,13 +371,14 @@ export const Header: React.FC<HeaderProps> = ({
               </a>
 
               {/* Account */}
-              <a data-store-link href={routePath('account')}
+              <a data-store-link href={routePath(isAuthenticated ? 'account' : 'login')}
 
-                className="p-2 text-gray-700 hover:text-[#073faf] transition-colors cursor-pointer"
-                title="My Account"
-                aria-label="My Account"
+                className="relative p-2 text-gray-700 hover:text-[#073faf] transition-colors cursor-pointer"
+                title={isAuthenticated ? 'My Account' : 'Sign in or create account'}
+                aria-label={isAuthenticated ? 'My Account' : 'Sign in or create account'}
               >
                 <User className="w-5 h-5" />
+                {isAuthenticated && <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white" />}
               </a>
             </div>
           </div>
