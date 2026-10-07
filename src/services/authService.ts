@@ -117,9 +117,21 @@ export async function sendPasswordReset(email: string) {
     method: 'POST',
     body: JSON.stringify({
       email,
-      redirect_to: `${window.location.origin}/account/login/`,
+      redirect_to: `${window.location.origin}/account/reset-password/`,
     }),
   });
+}
+
+export async function updatePassword(accessToken: string, password: string) {
+  if (!authConfigured) throw new Error('Customer authentication is not configured yet.');
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+    method: 'PUT',
+    headers: headers(accessToken),
+    body: JSON.stringify({ password }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.msg || data?.message || 'Password update failed.');
+  return data;
 }
 
 export async function sendPhoneOtp(phone: string) {
