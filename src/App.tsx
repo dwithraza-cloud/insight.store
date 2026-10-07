@@ -84,10 +84,10 @@ export default function App({ initialPath }: { initialPath?: string } = {}) {
       if (!raw) return { cart: [] as CartItem[], wishlist: [] as number[], compare: [] as number[], orders: [] as Order[] };
       const parsed = JSON.parse(raw);
       const restoredCart: CartItem[] = Array.isArray(parsed.cart)
-        ? parsed.cart.map((item: any) => {
+        ? parsed.cart.map((item: any): CartItem | null => {
             const product = productsData.find((p) => p.id === Number(item.productId));
             return product ? { product, quantity: Math.max(1, Number(item.quantity) || 1) } : null;
-          }).filter(Boolean)
+          }).filter((item: CartItem | null): item is CartItem => Boolean(item))
         : [];
       const validIds = new Set(productsData.map((p) => p.id));
       const restoredWishlist = Array.isArray(parsed.wishlist) ? parsed.wishlist.map(Number).filter((id: number) => validIds.has(id)) : [];
