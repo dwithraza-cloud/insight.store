@@ -92,8 +92,7 @@ export async function signUpWithEmail(fullName: string, email: string, password:
     body: JSON.stringify({
       email,
       password,
-      phone: phone || undefined,
-      data: { full_name: fullName },
+      data: { full_name: fullName, phone: phone || undefined },
     }),
   });
   if (data.access_token) {
