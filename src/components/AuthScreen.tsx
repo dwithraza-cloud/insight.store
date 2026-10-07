@@ -81,8 +81,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
         else setStatus({ type: 'success', text: 'Account created. Please verify your email before signing in.' });
       } else {
         if (!emailOrPhone.includes('@')) throw new Error('Enter your email address or use Phone login.');
-        const session = await signInWithEmail(emailOrPhone.trim(), password);
-        if (!remember) sessionStorage.setItem('insight.auth.session-only', '1');
+        const session = await signInWithEmail(emailOrPhone.trim(), password, remember);
         onAuthenticated(session);
       }
     } catch (err) {
