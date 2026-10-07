@@ -61,29 +61,37 @@ async function request(path: string, init: RequestInit = {}) {
 export function getStoredSession(): AuthSession | null {
   if (typeof window === 'undefined') return null;
   try {
-    const raw = localStorage.getItem(SESSION_KEY);
+    const raw = sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(SESSION_KEY);
     if (!raw) return null;
     const session = JSON.parse(raw) as AuthSession;
     if (!session?.accessToken || !session?.user?.id) return null;
+    if (session.expiresAt && session.expiresAt * 1000 <= Date.now()) {
+      localStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(SESSION_KEY);
+      return null;
+    }
     return session;
   } catch {
     return null;
   }
 }
 
-export function storeSession(session: AuthSession | null) {
+export function storeSession(session: AuthSession | null, persistent = true) {
   if (typeof window === 'undefined') return;
-  if (!session) localStorage.removeItem(SESSION_KEY);
-  else localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  localStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(SESSION_KEY);
+  if (!session) return;
+  const target = persistent ? localStorage : sessionStorage;
+  target.setItem(SESSION_KEY, JSON.stringify(session));
 }
 
-export async function signInWithEmail(email: string, password: string) {
+export async function signInWithEmail(email: string, password: string, persistent = true) {
   const data = await request('/token?grant_type=password', {
     method: 'POST',
     body: JSON.stringify({ email, password }),
   });
   const session = mapSession(data);
-  storeSession(session);
+  storeSession(session, persistent);
   return session;
 }
 
