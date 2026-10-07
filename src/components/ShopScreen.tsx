@@ -652,9 +652,10 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
                         setCurrentPage(pageNum);
                         window.scrollTo({ top: 120, behavior: 'smooth' });
                       }}
+                      aria-current={isActive ? 'page' : undefined}
                       className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full text-xs font-extrabold transition-all cursor-pointer flex items-center justify-center ${
                         isActive
-                          ? 'bg-[#073faf] text-white shadow-md shadow-blue-900/20 scale-105'
+                          ? 'active bg-[#073faf] text-white border-[#073faf] shadow-md shadow-blue-900/20 scale-105'
                           : 'text-slate-700 hover:bg-slate-100'
                       }`}
                     >
