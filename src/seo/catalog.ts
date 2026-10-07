@@ -36,4 +36,4 @@ export const categoryIntro: Record<string, string> = {
 export function categoryDescription(name: string) {
   return categoryIntro[name] || `Browse ${name.toLowerCase()} at Insight Store in Pakistan. Compare current PKR prices, availability and product details before ordering.`;
 }
-export const publicPaths = ['/', '/shop/', '/about/', '/contact/', '/blog/', '/help/', '/account/login/', '/account/signup/', '/account/reset-password/', ...activeDepartments.map(d => categoryPath(d.name)), ...productsData.map(productPath), ...blogPostsData.map(articlePath)];
+export const publicPaths = ['/', '/shop/', '/about/', '/contact/', '/blog/', '/help/', ...activeDepartments.map(d => categoryPath(d.name)), ...productsData.map(productPath), ...blogPostsData.map(articlePath)];
