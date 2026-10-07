@@ -165,7 +165,8 @@ export default function App({ initialPath }: { initialPath?: string } = {}) {
     setCompare(mergedCompare);
     setOrders(mergedOrders);
     setShoppingReady(true);
-    navigate('/account/');
+    const requestedNext = new URLSearchParams(window.location.search).get('next');
+    navigate(requestedNext && requestedNext.startsWith('/') && !requestedNext.startsWith('//') ? requestedNext : '/account/');
   };
 
   const handleLogout = async () => {
