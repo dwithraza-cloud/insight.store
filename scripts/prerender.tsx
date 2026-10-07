@@ -24,7 +24,7 @@ for (const src of images) {
   const target = join(dist, productAsset(src)); mkdirSync(dirname(target), { recursive: true });
   await sharp(join(dirname(svgPath), file)).extract({ left, top, width: 256, height: 256 }).webp({ quality: 85 }).toFile(target);
 }
-const privatePaths = ['/cart/', '/checkout/', '/wishlist/', '/compare/', '/account/'];
+const privatePaths = ['/cart/', '/checkout/', '/wishlist/', '/compare/', '/account/', '/account/login/', '/account/signup/', '/account/reset-password/'];
 const paths = [...publicPaths, ...privatePaths, '/404/'];
 for (const path of paths) {
   const m = metadataFor(path);
