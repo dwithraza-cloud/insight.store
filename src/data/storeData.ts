@@ -2,14 +2,14 @@ import { Department, HeroSlide, BlogPost } from '../types';
 import { productsData } from './products';
 
 const DEPARTMENT_META: Array<Omit<Department, 'count' | 'image'> & { image?: string }> = [
-  { id: 'digital-products', name: 'Digital Products', icon: 'Layers', description: 'Subscriptions, creative tools, streaming and AI access' },
-  { id: 'bedsheets', name: 'Bedsheets', icon: 'Bed', description: 'Pure cotton single and king-size collections' },
+  { id: 'digital-products', name: 'Digital Products', icon: 'Layers', image: '/images/category-gadgets.webp', description: 'Subscriptions, creative tools, streaming and AI access' },
+  { id: 'bedsheets', name: 'Bedsheets', icon: 'Bed', image: '/images/banner-home-living.webp', description: 'Pure cotton single and king-size collections' },
   { id: 'clothes', name: 'Ladies & Gents Clothes', icon: 'Shirt', image: '/images/category-fashion.webp', description: 'Lawn collections and premium embroidered suits' },
-  { id: 'bags-accessories', name: 'Bags & Accessories', icon: 'ShoppingBag', description: 'Everyday bags, pouches and useful accessories' },
-  { id: 'kitchen', name: 'Kitchen', icon: 'CookingPot', description: 'Practical cookware for everyday use' },
+  { id: 'bags-accessories', name: 'Bags & Accessories', icon: 'ShoppingBag', image: '/images/category-fashion.webp', description: 'Everyday bags, pouches and useful accessories' },
+  { id: 'kitchen', name: 'Kitchen', icon: 'CookingPot', image: '/images/category-kitchen.webp', description: 'Practical cookware for everyday use' },
   { id: 'kitchen-accessories', name: 'Kitchen Accessories', icon: 'Utensils', image: '/images/category-kitchen.webp', description: 'Cookware, utensils and modern prep tools' },
   { id: 'toys', name: 'Toys', icon: 'Gamepad2', image: '/images/category-toys.webp', description: 'Fun toys, activity products and gifts' },
-  { id: 'personal-care', name: 'Personal Care', icon: 'HeartPulse', description: 'Useful personal care and grooming essentials' },
+  { id: 'personal-care', name: 'Personal Care', icon: 'HeartPulse', image: '/images/category-home-decor.webp', description: 'Useful personal care and grooming essentials' },
   { id: 'gadgets', name: 'Gadgets', icon: 'Smartphone', image: '/images/category-gadgets.webp', description: 'Power banks, earbuds, lights and accessories' },
   { id: 'mobile', name: 'Mobile', icon: 'Smartphone', description: 'Smartphones and mobile essentials' },
   { id: 'computers', name: 'Computers', icon: 'Laptop', description: 'Laptops and computing products' },
@@ -31,7 +31,7 @@ export const departmentsData: Department[] = DEPARTMENT_META.map((department) =>
   return {
     ...department,
     count: categoryProducts.length,
-    image: department.image || categoryProducts[0]?.image || '/images/category-gadgets.webp',
+    image: department.image || '/images/category-gadgets.webp',
   };
 });
 
